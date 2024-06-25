@@ -1,17 +1,20 @@
 [versions]
-agp = "8.4.0"
-kotlin = "1.9.0"
-coreKtx = "1.13.1"
-junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-lifecycleRuntimeKtx = "2.8.2"
 activityCompose = "1.9.0"
-composeBom = "2023.08.00"
+agp = "8.4.2"
+composeBom = "2024.06.00"
+coreKtx = "1.13.1"
+daggerHilt = "2.51.1"
+espressoCore = "3.6.0"
+junit = "4.13.2"
+junitVersion = "1.2.0"
+ksp = "1.9.22-1.0.17"
+kotlin = "1.9.22"
+lifecycleRuntimeKtx = "2.8.2"
+okhttp = "4.12.0"
+retrofit = "2.11.0"
+room = "2.6.1"
 
 [libraries]
-androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
@@ -24,8 +27,21 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+daggerHilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
+daggerHiltCompiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttpLogging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
+retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
+room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+dagger-library = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 
