@@ -14,9 +14,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.codingle.core_data.data.navigation.Home
 import com.codingle.core_data.data.navigation.Splash
+import com.codingle.core_ui.theme.NewsOnComposeTheme
 import com.codingle.newsoncompose.screen.home.HomeScreen
-import com.codingle.newsoncompose.screen.splash.SplashScreen
-import com.codingle.newsoncompose.ui.theme.NewsOnComposeTheme
+import com.codingle.newsoncompose.screen.splash.SplashRoute
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,7 @@ fun MainScreen(modifier: Modifier) {
     val navController = rememberNavController()
 
     NavHost(navController, startDestination = Splash) {
-        composable<Splash> { SplashScreen() }
+        composable<Splash> { SplashRoute(navController) }
 
         composable<Home> { HomeScreen(modifier) }
     }
