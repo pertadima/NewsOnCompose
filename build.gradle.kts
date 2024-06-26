@@ -5,4 +5,5 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.dagger.library) apply false
     alias(libs.plugins.ksp.library) apply false
+    alias(libs.plugins.detekt.library) apply false
 }

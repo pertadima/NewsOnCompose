@@ -5,6 +5,7 @@ coil = "2.6.0"
 composeBom = "2024.06.00"
 coreKtx = "1.13.1"
 daggerHilt = "2.51.1"
+detekt = "1.22.0"
 espressoCore = "3.6.0"
 junit = "4.13.2"
 junitVersion = "1.2.0"
@@ -47,9 +48,10 @@ serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
-jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
+detekt-library = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dagger-library = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
+jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 serialization-library = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-plugin" }
 
