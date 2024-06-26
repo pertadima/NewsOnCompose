@@ -7,10 +7,15 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.codingle.core_data.data.navigation.Home
+import com.codingle.core_data.data.navigation.Splash
+import com.codingle.newsoncompose.screen.home.HomeScreen
+import com.codingle.newsoncompose.screen.splash.SplashScreen
 import com.codingle.newsoncompose.ui.theme.NewsOnComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -20,10 +25,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             NewsOnComposeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    MainScreen(modifier = Modifier.padding(innerPadding))
                 }
             }
         }
@@ -31,17 +33,12 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MainScreen(modifier: Modifier) {
+    val navController = rememberNavController()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    NewsOnComposeTheme {
-        Greeting("Android")
+    NavHost(navController, startDestination = Splash) {
+        composable<Splash> { SplashScreen() }
+
+        composable<Home> { HomeScreen(modifier) }
     }
 }
