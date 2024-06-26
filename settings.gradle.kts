@@ -25,6 +25,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "NewsOnCompose"
 include(":app")
-include(":core")
-include(":core-network")
-include(":core-data")
+include(":core:core")
+include(":core:core-network")
+include(":core:core-data")
+include(":core:core-ui")
+
+include(":api:api-sources")

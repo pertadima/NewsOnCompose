@@ -1,6 +1,7 @@
 [versions]
 activityCompose = "1.9.0"
 agp = "8.4.2"
+coil = "2.6.0"
 composeBom = "2024.06.00"
 coreKtx = "1.13.1"
 daggerHilt = "2.51.1"
@@ -10,9 +11,11 @@ junitVersion = "1.2.0"
 ksp = "1.9.22-1.0.17"
 kotlin = "1.9.22"
 lifecycleRuntimeKtx = "2.8.2"
-navigation = "2.7.7"
+navigation = "2.8.0-beta03"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
+serialization = "1.6.0"
+serialization-plugin = "2.0.0"
 room = "2.6.1"
 
 [libraries]
@@ -30,6 +33,7 @@ androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-man
 androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 daggerHilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
 daggerHiltCompiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -39,6 +43,7 @@ retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = 
 retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
 roomCompiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+serialization = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "serialization" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
@@ -46,4 +51,5 @@ jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = 
 android-library = { id = "com.android.library", version.ref = "agp" }
 dagger-library = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+serialization-library = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-plugin" }
 
