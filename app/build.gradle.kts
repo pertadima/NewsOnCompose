@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.ksp.library)
     alias(libs.plugins.dagger.library)
+    alias(libs.plugins.detekt.library)
 }
 
 android {
