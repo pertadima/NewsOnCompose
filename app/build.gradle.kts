@@ -46,7 +46,7 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.activity.compose)
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.ui)
@@ -64,6 +64,7 @@ dependencies {
 
     implementation(libs.coil.compose)
     implementation(libs.daggerHilt)
+    implementation(libs.hilt.navigation)
     ksp(libs.daggerHiltCompiler)
 
     // network
@@ -71,16 +72,15 @@ dependencies {
     implementation(libs.okhttpLogging)
     implementation(libs.retrofit)
     implementation(libs.retrofitGson)
-
-    // database
     implementation(libs.room)
+    implementation(libs.room.ktx)
     ksp(libs.roomCompiler)
 
     // local module
-    implementation(project(":core:core"))
-    implementation(project(":core:core-data"))
-    implementation(project(":core:core-network"))
-    implementation(project(":core:core-ui"))
+    implementation(project(":core"))
+    implementation(project(":core-data"))
+    implementation(project(":core-network"))
+    implementation(project(":core-ui"))
 
-    implementation(project(":api:api-sources"))
+    implementation(project(":api-sources"))
 }

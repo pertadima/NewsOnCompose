@@ -12,12 +12,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.codingle.core_data.data.navigation.Home
-import com.codingle.core_data.data.navigation.Splash
-import com.codingle.core_ui.theme.NewsOnComposeTheme
-import com.codingle.newsoncompose.screen.home.HomeScreen
+import com.codingle.newsoncompose.core_data.data.navigation.Home
+import com.codingle.newsoncompose.core_data.data.navigation.Splash
+import com.codingle.newsoncompose.core_ui.theme.NewsOnComposeTheme
+import com.codingle.newsoncompose.screen.home.HomeRoute
 import com.codingle.newsoncompose.screen.splash.SplashRoute
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +41,6 @@ fun MainScreen(modifier: Modifier) {
     NavHost(navController, startDestination = Splash) {
         composable<Splash> { SplashRoute(navController) }
 
-        composable<Home> { HomeScreen(modifier) }
+        composable<Home> { HomeRoute(navController, modifier) }
     }
 }
