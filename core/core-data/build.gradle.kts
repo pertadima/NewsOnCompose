@@ -5,6 +5,7 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.serialization.library)
     alias(libs.plugins.detekt.library)
+    alias(libs.plugins.ksp.library)
 }
 
 android {
@@ -37,6 +38,11 @@ dependencies {
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.serialization)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.daggerHilt)
+    ksp(libs.daggerHiltCompiler)
 
     implementation(libs.retrofit)
 
