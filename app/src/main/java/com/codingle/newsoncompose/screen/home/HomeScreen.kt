@@ -1,5 +1,6 @@
 package com.codingle.newsoncompose.screen.home
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
@@ -11,6 +12,7 @@ import androidx.navigation.NavHostController
 @Composable
 fun HomeRoute(navController: NavHostController, modifier: Modifier) {
     HomeScreen(modifier = modifier)
+    Log.e("TAG", "HomeRoute: $navController")
 }
 
 @Composable
