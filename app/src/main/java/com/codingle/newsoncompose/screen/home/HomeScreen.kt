@@ -29,17 +29,9 @@ fun HomeScreen(
     LaunchedEffect(Unit) { getSources() }
     Column(modifier = modifier.fillMaxSize()) {
         when (sources) {
-            is StateFailed -> {
-
-            }
-
-            is StateSuccess -> sources.data?.forEach {
-                Text(text = it.name.orEmpty())
-            }
-
-            else -> {
-
-            }
+            is StateFailed -> Unit
+            is StateSuccess -> sources.data?.forEach { Text(text = it.name.orEmpty()) }
+            else -> Unit
         }
     }
 }
