@@ -1,6 +1,10 @@
+import org.gradle.api.JavaVersion.VERSION_1_8
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp.library)
+    alias(libs.plugins.dagger.library)
     alias(libs.plugins.detekt.library)
 }
 
@@ -22,8 +26,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = VERSION_1_8
+        targetCompatibility = VERSION_1_8
     }
     kotlinOptions {
         jvmTarget = "1.8"
@@ -36,4 +40,15 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.daggerHilt)
+    ksp(libs.daggerHiltCompiler)
+    implementation(libs.gson)
+    implementation(libs.retrofit)
+    implementation(libs.room)
+    implementation(libs.room.ktx)
+    ksp(libs.roomCompiler)
+
+    // local module
+    implementation(project(":core-data"))
 }

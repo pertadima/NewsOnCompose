@@ -16,8 +16,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest.Builder
-import com.codingle.core_data.data.navigation.Home
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.core_data.data.navigation.Home
 import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.LOGO_CONTENT_DESCRIPTION
 import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.SPLASH_TIME
 import kotlinx.coroutines.delay
