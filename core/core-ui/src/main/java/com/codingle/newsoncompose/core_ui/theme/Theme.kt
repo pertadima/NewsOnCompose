@@ -5,17 +5,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import com.codingle.newsoncompose.core_ui.theme.Red.Red100
+import com.codingle.newsoncompose.core_ui.theme.Red.Red200
+import com.codingle.newsoncompose.core_ui.theme.Red.Red700
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Red100,
-    secondary = PurpleGrey80,
+val DarkColorScheme = darkColorScheme(
+    primary = Red700,
+    secondary = Red200,
     tertiary = Pink80
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Red100,
-    secondary = PurpleGrey40,
+val LightColorScheme = lightColorScheme(
+    primary = Red700,
+    secondary = Red200,
     tertiary = Pink40
 )
 
