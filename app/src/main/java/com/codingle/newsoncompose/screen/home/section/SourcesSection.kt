@@ -16,17 +16,16 @@ import com.codingle.newsoncompose.api_sources.data.dto.SourceDto
 import com.codingle.newsoncompose.core_data.base.BaseState
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
+import com.codingle.newsoncompose.core_ui.component.chip.ChipGroup
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 
 @Composable
 internal fun SourceSection(
     sources: BaseState<List<SourceDto>>
-) {
-    when (sources) {
-        is StateFailed -> Unit
-        is StateSuccess -> Unit
-        else -> LoadingSourceSection()
-    }
+) = when (sources) {
+    is StateFailed -> Unit
+    is StateSuccess -> SuccessSourceSection(sources.data.orEmpty())
+    else -> LoadingSourceSection()
 }
 
 @Composable
@@ -44,4 +43,9 @@ private fun LoadingSourceSection() {
             if (i != 5) Spacer(modifier = Modifier.width(5.dp))
         }
     }
+}
+
+@Composable
+private fun SuccessSourceSection(data: List<SourceDto>) {
+    ChipGroup(item = data.map { it.name.orEmpty() })
 }
