@@ -2,8 +2,6 @@ package com.codingle.newsoncompose.core_ui.component.chip
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ripple.LocalRippleTheme
@@ -16,8 +14,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment.Companion.BottomCenter
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import com.codingle.newsoncompose.core_ui.component.util.NoRippleTheme
@@ -33,28 +29,25 @@ fun Chip(
 
     CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
         CompositionLocalProvider(LocalRippleTheme provides NoRippleTheme) {
-            Box(
-                modifier = Modifier,
-                contentAlignment = BottomCenter
+            OutlinedButton(
+                onClick = onClick,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (selected) {
+                        MaterialTheme.colorScheme.primary
+                    } else MaterialTheme.colorScheme.surfaceVariant,
+                ),
+                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
+                contentPadding = PaddingValues(18.dp, 0.dp),
+                interactionSource = interactionSource,
+                shape = RoundedCornerShape(20.dp)
             ) {
-                Column {
-                    OutlinedButton(
-                        onClick = onClick,
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = if (selected) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
-                        ),
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                        contentPadding = PaddingValues(16.dp, 6.dp),
-                        interactionSource = interactionSource,
-                        shape = RoundedCornerShape(20.dp)
-                    ) {
-                        Text(
-                            text = name,
-                            color = if (selected) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSurfaceVariant,
-                            style = MaterialTheme.typography.bodyMedium.copy(fontWeight = W600)
-                        )
-                    }
-                }
+                Text(
+                    text = name,
+                    color = if (selected) {
+                        MaterialTheme.colorScheme.onPrimary
+                    } else MaterialTheme.colorScheme.onSurfaceVariant,
+                    style = MaterialTheme.typography.labelMedium.copy(fontWeight = W600)
+                )
             }
         }
     }
