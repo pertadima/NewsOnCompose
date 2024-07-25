@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">NewsOnCompose</string>
+    <string name="sources_all">All</string>
 </resources>
