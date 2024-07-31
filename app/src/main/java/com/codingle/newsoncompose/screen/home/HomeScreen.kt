@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -29,6 +30,7 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.screen.home.section.HeadlineSection
 import com.codingle.newsoncompose.screen.home.section.SourceSection
 
 @Composable
@@ -45,9 +47,14 @@ fun HomeScreen(
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets
 ) = with(viewModel) {
     val sources = viewModel.sourcesState.collectAsStateWithLifecycle().value
+    val headlines = viewModel.headlineState.collectAsStateWithLifecycle().value
     val context = LocalContext.current
 
-    LaunchedEffect(Unit) { getSources() }
+    LaunchedEffect(Unit) {
+        getSources()
+        getHeadlines()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -57,7 +64,7 @@ fun HomeScreen(
             windowInsets = windowInsets,
             title = {
                 Text(
-                    "NewsOnCompose",
+                    context.getString(R.string.app_name),
                     style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
                     color = MaterialTheme.colorScheme.onBackground,
                     maxLines = 1
@@ -88,7 +95,19 @@ fun HomeScreen(
                 navigationIconContentColor = MaterialTheme.colorScheme.onBackground
             )
         )
-        Spacer(modifier = Modifier.height(16.dp))
-        SourceSection(sources, onReload = { getSources() })
+        LazyColumn {
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+            item {
+                SourceSection(
+                    sources,
+                    onReload = { getSources() },
+                    onTabChanged = {
+
+                    })
+            }
+            item { Spacer(modifier = Modifier.height(20.dp)) }
+            item { HeadlineSection(headlines, onReload = { getHeadlines() }) }
+            item { Spacer(modifier = Modifier.height(1200.dp)) }
+        }
     }
 }

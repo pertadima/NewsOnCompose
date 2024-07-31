@@ -36,3 +36,5 @@ project(":core-ui").projectDir = File("core/core-ui")
 
 include(":api-sources")
 project(":api-sources").projectDir = File("api/api-sources")
+include(":api-headlines")
+project(":api-headlines").projectDir = File("api/api-headlines")
