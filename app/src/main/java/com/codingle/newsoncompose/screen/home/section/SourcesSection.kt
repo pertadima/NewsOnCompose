@@ -1,9 +1,8 @@
 package com.codingle.newsoncompose.screen.home.section
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -31,18 +30,20 @@ import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 @Composable
 internal fun SourceSection(
     sources: BaseState<List<SourceDto>>,
-    onReload: () -> Unit
-) = AnimatedVisibility(visible = true) {
-    when (sources) {
-        is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = onReload)
-        is StateSuccess -> SuccessSourceSection(sources.data.orEmpty())
-        else -> LoadingSourceSection()
-    }
+    onReload: () -> Unit,
+    onTabChanged: (SourceDto) -> Unit
+) = when (sources) {
+    is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = onReload)
+    is StateSuccess -> SuccessSourceSection(sources.data.orEmpty(), onTabChanged)
+    else -> LoadingSourceSection()
 }
 
 @Composable
 private fun LoadingSourceSection() {
-    LazyRow(modifier = Modifier.padding(horizontal = 16.dp)) {
+    LazyRow(
+        modifier = Modifier.padding(horizontal = 16.dp),
+        horizontalArrangement = spacedBy(5.dp),
+    ) {
         for (i in 0..5) {
             item {
                 Box(
@@ -53,14 +54,16 @@ private fun LoadingSourceSection() {
                         .shimmer()
                         .background(MaterialTheme.colorScheme.surfaceContainerHigh)
                 )
-                if (i != 5) Spacer(modifier = Modifier.width(5.dp))
             }
         }
     }
 }
 
 @Composable
-private fun SuccessSourceSection(data: List<SourceDto>) {
+private fun SuccessSourceSection(
+    data: List<SourceDto>,
+    onTabChanged: (SourceDto) -> Unit
+) {
     val context = LocalContext.current
     var selectedItemPos by remember { mutableIntStateOf(0) }
 
@@ -69,5 +72,8 @@ private fun SuccessSourceSection(data: List<SourceDto>) {
             add(0, context.getString(R.string.sources_all))
         },
         selectedItemPos = selectedItemPos
-    ) { selectedItemPos = it }
+    ) {
+        selectedItemPos = it
+        onTabChanged(data[it])
+    }
 }

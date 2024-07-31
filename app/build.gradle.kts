@@ -83,4 +83,5 @@ dependencies {
     implementation(project(":core-ui"))
 
     implementation(project(":api-sources"))
+    implementation(project(":api-headlines"))
 }
