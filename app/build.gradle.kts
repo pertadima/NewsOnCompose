@@ -66,6 +66,7 @@ dependencies {
     implementation(libs.daggerHilt)
     implementation(libs.hilt.navigation)
     ksp(libs.daggerHiltCompiler)
+    implementation(libs.lottie)
 
     // network
     implementation(libs.okhttp)

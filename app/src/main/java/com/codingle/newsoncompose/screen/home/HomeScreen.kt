@@ -102,8 +102,11 @@ fun HomeScreen(
                     sources,
                     onReload = { getSources() },
                     onTabChanged = {
-
-                    })
+                        resetHeadlineState()
+                        val source = if (it == context.getString(R.string.sources_all)) "" else it
+                        getHeadlines(source)
+                    }
+                )
             }
             item { Spacer(modifier = Modifier.height(20.dp)) }
             item { HeadlineSection(headlines, onReload = { getHeadlines() }) }

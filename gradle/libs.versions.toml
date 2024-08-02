@@ -14,6 +14,7 @@ junitVersion = "1.2.0"
 ksp = "1.9.22-1.0.17"
 kotlin = "1.9.22"
 lifecycleRuntimeKtx = "2.8.2"
+lottie = "6.4.1"
 navigation = "2.8.0-beta04"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
@@ -42,6 +43,7 @@ daggerHiltCompiler = { group = "com.google.dagger", name = "hilt-compiler", vers
 gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hiltNavigation" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
+lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttpLogging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }

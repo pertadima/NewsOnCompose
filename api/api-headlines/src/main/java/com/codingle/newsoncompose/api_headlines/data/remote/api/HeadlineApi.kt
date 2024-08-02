@@ -6,6 +6,6 @@ import retrofit2.http.GET
 
 
 interface HeadlineApi {
-    @GET("v2/top-headlines?language=en")
+    @GET("v2/top-headlines?language=en&pageSize=100")
     suspend fun getHeadline(): Response<HeadlineResponse>
 }

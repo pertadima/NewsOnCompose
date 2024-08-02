@@ -13,6 +13,7 @@ import com.codingle.newsoncompose.core_data.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,10 +35,14 @@ class HomeViewModel @Inject constructor(
         onError = { _sourcesState.value = StateFailed(it) }
     )
 
-    fun getHeadlines() = collectFlow(
-        getHeadlineUseCase(),
+    fun getHeadlines(source: String = "") = collectFlow(
+        getHeadlineUseCase(source),
         onSuccess = { _headlineState.value = StateSuccess(it) },
         onLoading = { _headlineState.value = StateLoading },
         onError = { _headlineState.value = StateFailed(it) }
     )
+
+    fun resetHeadlineState() {
+        _headlineState.update { StateInitial }
+    }
 }

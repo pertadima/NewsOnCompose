@@ -9,5 +9,5 @@ import javax.inject.Inject
 class GetHeadlineUseCaseImpl @Inject constructor(
     private val repo: HeadlineRepository
 ) : GetHeadlineUseCase {
-    override fun invoke(): Flow<ApiResult<List<HeadlineArticleDto>>> = repo.getHeadlines()
+    override fun invoke(source: String): Flow<ApiResult<List<HeadlineArticleDto>>> = repo.getHeadlines(source)
 }

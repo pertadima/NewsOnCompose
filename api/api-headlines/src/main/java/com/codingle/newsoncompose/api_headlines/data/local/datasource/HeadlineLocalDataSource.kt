@@ -5,5 +5,6 @@ import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 
 interface HeadlineLocalDataSource {
     suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>)
-    suspend fun getAllHeadline(): ApiResult<List<HeadlineArticleEntity>?>
+    suspend fun getAllHeadlines(): ApiResult<List<HeadlineArticleEntity>?>
+    suspend fun getHeadlines(source: String): ApiResult<List<HeadlineArticleEntity>?>
 }

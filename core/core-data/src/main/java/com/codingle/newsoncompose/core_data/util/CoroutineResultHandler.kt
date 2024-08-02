@@ -1,5 +1,6 @@
 package com.codingle.newsoncompose.core_data.util
 
+import android.util.Log
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Error
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Loading
@@ -17,7 +18,13 @@ object CoroutineResultHandler {
 
     fun <T> localResultFlow(localCall: suspend () -> ApiResult<T>) = flow {
         emit(Loading)
-        emit(localCall)
+        emit(
+            when (val localData = localCall()) {
+                is Error -> Error(localData.error)
+                is Loading -> Loading
+                is Success -> Success(localData.data, false)
+            }
+        )
     }.flowOn(IO)
 
     fun <A, B> resultFlow(
@@ -31,6 +38,7 @@ object CoroutineResultHandler {
                 is Loading -> Loading
                 is Success -> {
                     if (localData.data == null || (localData.data is List<*> && localData.data.isEmpty())) {
+                        Log.e("TAG", "resultFlow call remote ${localData.data}")
                         callRemote(networkCall)
                     } else Success(localData.data, false)
                 }

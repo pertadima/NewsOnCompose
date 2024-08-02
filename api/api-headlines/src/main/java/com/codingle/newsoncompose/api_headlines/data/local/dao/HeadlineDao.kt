@@ -9,7 +9,10 @@ import com.codingle.newsoncompose.api_headlines.data.entity.HeadlineArticleEntit
 @Dao
 interface HeadlineDao {
     @Query("SELECT * FROM tbl_headline")
-    suspend fun getAllHeadline(): List<HeadlineArticleEntity>?
+    suspend fun getAllHeadlines(): List<HeadlineArticleEntity>?
+
+    @Query("SELECT * FROM tbl_headline WHERE source = :newsSource")
+    suspend fun getHeadlines(newsSource: String): List<HeadlineArticleEntity>?
 
     @Insert(onConflict = REPLACE)
     suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>)
