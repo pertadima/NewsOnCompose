@@ -31,7 +31,7 @@ import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 internal fun SourceSection(
     sources: BaseState<List<SourceDto>>,
     onReload: () -> Unit,
-    onTabChanged: (SourceDto) -> Unit
+    onTabChanged: (String) -> Unit
 ) = when (sources) {
     is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = onReload)
     is StateSuccess -> SuccessSourceSection(sources.data.orEmpty(), onTabChanged)
@@ -62,18 +62,19 @@ private fun LoadingSourceSection() {
 @Composable
 private fun SuccessSourceSection(
     data: List<SourceDto>,
-    onTabChanged: (SourceDto) -> Unit
+    onTabChanged: (String) -> Unit
 ) {
     val context = LocalContext.current
     var selectedItemPos by remember { mutableIntStateOf(0) }
 
-    ChipGroup(
-        item = data.map { it.name.orEmpty() }.toMutableList().apply {
+    val mappedData = remember(data) {
+        data.map { it.name.orEmpty() }.toMutableList().apply {
             add(0, context.getString(R.string.sources_all))
-        },
-        selectedItemPos = selectedItemPos
-    ) {
+        }.toList()
+    }
+
+    ChipGroup(mappedData, selectedItemPos) {
         selectedItemPos = it
-        onTabChanged(data[it])
+        onTabChanged(mappedData[it])
     }
 }

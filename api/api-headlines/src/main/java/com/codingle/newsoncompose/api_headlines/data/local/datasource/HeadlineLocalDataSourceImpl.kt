@@ -11,5 +11,9 @@ class HeadlineLocalDataSourceImpl @Inject constructor(
     override suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>) =
         database.headlineDao().insertAllHeadline(sources)
 
-    override suspend fun getAllHeadline() = getLocalDataWithSingleObject { database.headlineDao().getAllHeadline() }
+    override suspend fun getAllHeadlines() = getLocalDataWithSingleObject { database.headlineDao().getAllHeadlines() }
+
+    override suspend fun getHeadlines(source: String) = getLocalDataWithSingleObject {
+        database.headlineDao().getHeadlines(source)
+    }
 }

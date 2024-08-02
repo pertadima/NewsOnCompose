@@ -5,5 +5,5 @@ import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 import kotlinx.coroutines.flow.Flow
 
 interface GetHeadlineUseCase {
-    operator fun invoke(): Flow<ApiResult<List<HeadlineArticleDto>>>
+    operator fun invoke(source: String = ""): Flow<ApiResult<List<HeadlineArticleDto>>>
 }

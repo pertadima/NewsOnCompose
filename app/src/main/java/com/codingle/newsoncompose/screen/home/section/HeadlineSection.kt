@@ -5,6 +5,7 @@ import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -19,14 +20,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.W600
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
+import com.airbnb.lottie.compose.LottieAnimation
+import com.airbnb.lottie.compose.LottieCompositionSpec.RawRes
+import com.airbnb.lottie.compose.LottieConstants.IterateForever
+import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.core_data.base.BaseState
@@ -45,21 +53,13 @@ internal fun HeadlineSection(
 
     Text(
         context.getString(R.string.headlines_today),
-        style = MaterialTheme.typography.titleSmall.copy(fontWeight = FontWeight.W600),
+        style = MaterialTheme.typography.titleSmall.copy(fontWeight = W600),
         color = MaterialTheme.colorScheme.onBackground,
         maxLines = 1,
         modifier = Modifier.padding(horizontal = 16.dp)
     )
 
     Spacer(modifier = Modifier.height(16.dp))
-
-    AnimatedVisibility(
-        visible = sources is StateSuccess,
-        enter = expandVertically(),
-        exit = shrinkVertically(),
-    ) {
-        if (sources is StateSuccess) SuccessHeadlineSection(sources.data.orEmpty())
-    }
 
     when (sources) {
         is StateFailed -> ReloadState(
@@ -69,7 +69,20 @@ internal fun HeadlineSection(
             onReload = onReload
         )
 
-        is StateSuccess -> Unit
+        is StateSuccess -> {
+            AnimatedVisibility(
+                visible = sources.data.isNullOrEmpty(),
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) { EmptyHeadlineSection() }
+
+            AnimatedVisibility(
+                visible = sources.data?.isNotEmpty() == true,
+                enter = expandVertically(),
+                exit = shrinkVertically(),
+            ) { SuccessHeadlineSection(sources.data.orEmpty()) }
+        }
+
         else -> LoadingHeadlineSection()
     }
 
@@ -147,7 +160,7 @@ private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
 
                     Text(
                         it.title,
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = FontWeight.W600),
+                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
                         color = MaterialTheme.colorScheme.onBackground,
                         maxLines = 3,
                         overflow = Ellipsis,
@@ -156,5 +169,31 @@ private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun EmptyHeadlineSection() {
+    Column(
+        horizontalAlignment = CenterHorizontally,
+        verticalArrangement = Center,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        val composition by rememberLottieComposition(RawRes(R.raw.not_found))
+        LottieAnimation(
+            composition,
+            modifier = Modifier.width(180.dp),
+            iterations = IterateForever,
+        )
+
+        Text(
+            "No results found",
+            style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
+            color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 1,
+            textAlign = TextAlign.Center,
+            overflow = Ellipsis,
+            modifier = Modifier.width(140.dp)
+        )
     }
 }
