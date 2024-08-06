@@ -10,32 +10,44 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_sources.data.dto.SourceDto
-import com.codingle.newsoncompose.core_data.base.BaseState
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
+import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.chip.ChipGroup
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
+import com.codingle.newsoncompose.screen.home.HomeViewModel
 
 @Composable
 internal fun SourceSection(
-    sources: BaseState<List<SourceDto>>,
-    onReload: () -> Unit,
-    onTabChanged: (String) -> Unit
-) = when (sources) {
-    is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = onReload)
-    is StateSuccess -> SuccessSourceSection(sources.data.orEmpty(), onTabChanged)
-    else -> LoadingSourceSection()
+    viewModel: HomeViewModel = hiltViewModel()
+) = with(viewModel) {
+    val context = LocalContext.current
+    val selectedItemPos = selectedTabPosition.collectAsStateWithLifecycle().value
+    val sources = sourcesState.collectAsStateWithLifecycle().value
+
+    LaunchedEffect(Unit) { if (sources is StateInitial) getSources() }
+
+    when (sources) {
+        is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = { getSources() })
+        is StateSuccess -> SuccessSourceSection(sources.data.orEmpty(), selectedItemPos) { pos, item ->
+            updateSelectedTabPosition(pos)
+            val source = if (item == context.getString(R.string.sources_all)) "" else item
+            getHeadlines(source)
+        }
+
+        else -> LoadingSourceSection()
+    }
 }
 
 @Composable
@@ -62,10 +74,10 @@ private fun LoadingSourceSection() {
 @Composable
 private fun SuccessSourceSection(
     data: List<SourceDto>,
-    onTabChanged: (String) -> Unit
+    selectedItemPos: Int,
+    onTabChanged: (Int, String) -> Unit
 ) {
     val context = LocalContext.current
-    var selectedItemPos by remember { mutableIntStateOf(0) }
 
     val mappedData = remember(data) {
         data.map { it.name.orEmpty() }.toMutableList().apply {
@@ -73,8 +85,5 @@ private fun SuccessSourceSection(
         }.toList()
     }
 
-    ChipGroup(mappedData, selectedItemPos) {
-        selectedItemPos = it
-        onTabChanged(mappedData[it])
-    }
+    ChipGroup(mappedData, selectedItemPos) { onTabChanged(it, mappedData[it]) }
 }

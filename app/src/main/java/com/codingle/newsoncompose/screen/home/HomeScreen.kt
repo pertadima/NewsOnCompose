@@ -19,13 +19,10 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -42,18 +39,10 @@ fun HomeRoute(navController: NavHostController, modifier: Modifier) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
     modifier: Modifier,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets
-) = with(viewModel) {
-    val sources = viewModel.sourcesState.collectAsStateWithLifecycle().value
-    val headlines = viewModel.headlineState.collectAsStateWithLifecycle().value
+) {
     val context = LocalContext.current
-
-    LaunchedEffect(Unit) {
-        getSources()
-        getHeadlines()
-    }
 
     Column(
         modifier = modifier
@@ -97,19 +86,9 @@ fun HomeScreen(
         )
         LazyColumn {
             item { Spacer(modifier = Modifier.height(16.dp)) }
-            item {
-                SourceSection(
-                    sources,
-                    onReload = { getSources() },
-                    onTabChanged = {
-                        resetHeadlineState()
-                        val source = if (it == context.getString(R.string.sources_all)) "" else it
-                        getHeadlines(source)
-                    }
-                )
-            }
+            item { SourceSection() }
             item { Spacer(modifier = Modifier.height(20.dp)) }
-            item { HeadlineSection(headlines, onReload = { getHeadlines() }) }
+            item { HeadlineSection() }
             item { Spacer(modifier = Modifier.height(1200.dp)) }
         }
     }

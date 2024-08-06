@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
@@ -29,6 +30,8 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieAnimation
@@ -38,62 +41,66 @@ import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.core_data.base.BaseState
-import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
-import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
+import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
+import com.codingle.newsoncompose.screen.home.HomeViewModel
 import com.codingle.newsoncompose.screen.splash.SplashScreenAttr
 
 @Composable
 internal fun HeadlineSection(
-    sources: BaseState<List<HeadlineArticleDto>>,
-    onReload: () -> Unit
-) = Column {
+    viewModel: HomeViewModel = hiltViewModel()
+) = with(viewModel) {
     val context = LocalContext.current
+    val headlines = headlineState.collectAsStateWithLifecycle().value
 
-    Text(
-        context.getString(R.string.headlines_today),
-        style = MaterialTheme.typography.titleSmall.copy(fontWeight = W600),
-        color = MaterialTheme.colorScheme.onBackground,
-        maxLines = 1,
-        modifier = Modifier.padding(horizontal = 16.dp)
-    )
+    LaunchedEffect(Unit) { if (headlines is StateInitial) getHeadlines() }
 
-    Spacer(modifier = Modifier.height(16.dp))
-
-    when (sources) {
-        is StateFailed -> ReloadState(
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .height(134.dp),
-            onReload = onReload
+    Column {
+        Text(
+            context.getString(R.string.headlines_today),
+            style = MaterialTheme.typography.titleSmall.copy(fontWeight = W600),
+            color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 1,
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        is StateSuccess -> {
-            AnimatedVisibility(
-                visible = sources.data.isNullOrEmpty(),
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) { EmptyHeadlineSection() }
+        Spacer(modifier = Modifier.height(16.dp))
 
-            AnimatedVisibility(
-                visible = sources.data?.isNotEmpty() == true,
-                enter = expandVertically(),
-                exit = shrinkVertically(),
-            ) { SuccessHeadlineSection(sources.data.orEmpty()) }
+        when (headlines) {
+            is BaseState.StateFailed -> ReloadState(
+                modifier = Modifier
+                    .padding(horizontal = 16.dp)
+                    .height(134.dp),
+                onReload = { getHeadlines() }
+            )
+
+            is BaseState.StateSuccess -> {
+                AnimatedVisibility(
+                    visible = headlines.data.isNullOrEmpty(),
+                    enter = expandVertically(),
+                    exit = shrinkVertically(),
+                ) { EmptyHeadlineSection() }
+
+                AnimatedVisibility(
+                    visible = headlines.data?.isNotEmpty() == true,
+                    enter = expandVertically(),
+                    exit = shrinkVertically(),
+                ) { SuccessHeadlineSection(headlines.data.orEmpty()) }
+            }
+
+            else -> LoadingHeadlineSection()
         }
 
-        else -> LoadingHeadlineSection()
+        Spacer(modifier = Modifier.height(25.dp))
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .padding(horizontal = 16.dp)
+                .background(MaterialTheme.colorScheme.onBackground)
+        )
     }
-
-    Spacer(modifier = Modifier.height(25.dp))
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .padding(horizontal = 16.dp)
-            .background(MaterialTheme.colorScheme.onBackground)
-    )
 }
 
 @Composable
