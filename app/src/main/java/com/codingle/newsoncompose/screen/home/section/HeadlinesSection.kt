@@ -1,6 +1,12 @@
 package com.codingle.newsoncompose.screen.home.section
 
+import android.content.Context
+import android.content.Intent
+import android.content.Intent.ACTION_VIEW
+import android.net.Uri
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
@@ -21,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -46,6 +53,7 @@ import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 import com.codingle.newsoncompose.screen.home.HomeViewModel
 import com.codingle.newsoncompose.screen.splash.SplashScreenAttr
+
 
 @Composable
 internal fun HeadlineSection(
@@ -124,7 +132,10 @@ private fun LoadingHeadlineSection() {
 }
 
 @Composable
-private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
+private fun SuccessHeadlineSection(
+    data: List<HeadlineArticleDto>,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+) {
     val state = rememberLazyListState()
     val context = LocalContext.current
     val headerData = data.take(5)
@@ -138,7 +149,12 @@ private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
         ) {
             headerData.take(5).forEach {
                 item {
-                    Column {
+                    Column(
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) { context.openBrowser(it.url) }
+                    ) {
                         SubcomposeAsyncImage(
                             model = ImageRequest.Builder(context)
                                 .allowHardware(true)
@@ -183,6 +199,10 @@ private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
                     .padding(top = 20.dp)
                     .padding(horizontal = 16.dp)
                     .fillMaxWidth()
+                    .clickable(
+                        interactionSource = interactionSource,
+                        indication = null
+                    ) { context.openBrowser(it.url) }
             ) {
                 Text(
                     it.source,
@@ -251,4 +271,9 @@ private fun EmptyHeadlineSection() {
             modifier = Modifier.width(140.dp)
         )
     }
+}
+
+private fun Context.openBrowser(url: String) {
+    val browserIntent = Intent(ACTION_VIEW, Uri.parse(url))
+    startActivity(browserIntent)
 }
