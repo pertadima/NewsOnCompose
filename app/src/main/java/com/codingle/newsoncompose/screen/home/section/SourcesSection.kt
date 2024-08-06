@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
@@ -64,7 +64,7 @@ private fun LoadingSourceSection() {
                         .width(100.dp)
                         .clip(RoundedCornerShape(20.dp))
                         .shimmer()
-                        .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                        .background(colorScheme.surfaceContainerHigh)
                 )
             }
         }

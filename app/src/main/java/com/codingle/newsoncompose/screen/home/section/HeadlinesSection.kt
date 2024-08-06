@@ -1,11 +1,8 @@
 package com.codingle.newsoncompose.screen.home.section
 
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Arrangement.Center
+import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -40,8 +39,9 @@ import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
-import com.codingle.newsoncompose.core_data.base.BaseState
+import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
+import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 import com.codingle.newsoncompose.screen.home.HomeViewModel
@@ -56,50 +56,36 @@ internal fun HeadlineSection(
 
     LaunchedEffect(Unit) { if (headlines is StateInitial) getHeadlines() }
 
-    Column {
-        Text(
-            context.getString(R.string.headlines_today),
-            style = MaterialTheme.typography.titleSmall.copy(fontWeight = W600),
-            color = MaterialTheme.colorScheme.onBackground,
-            maxLines = 1,
-            modifier = Modifier.padding(horizontal = 16.dp)
-        )
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        when (headlines) {
-            is BaseState.StateFailed -> ReloadState(
-                modifier = Modifier
-                    .padding(horizontal = 16.dp)
-                    .height(134.dp),
-                onReload = { getHeadlines() }
+    LazyColumn {
+        item {
+            Text(
+                context.getString(R.string.headlines_today),
+                style = MaterialTheme.typography.titleSmall.copy(fontWeight = W600),
+                color = colorScheme.onBackground,
+                maxLines = 1,
+                modifier = Modifier.padding(horizontal = 16.dp)
             )
-
-            is BaseState.StateSuccess -> {
-                AnimatedVisibility(
-                    visible = headlines.data.isNullOrEmpty(),
-                    enter = expandVertically(),
-                    exit = shrinkVertically(),
-                ) { EmptyHeadlineSection() }
-
-                AnimatedVisibility(
-                    visible = headlines.data?.isNotEmpty() == true,
-                    enter = expandVertically(),
-                    exit = shrinkVertically(),
-                ) { SuccessHeadlineSection(headlines.data.orEmpty()) }
-            }
-
-            else -> LoadingHeadlineSection()
         }
 
-        Spacer(modifier = Modifier.height(25.dp))
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(1.dp)
-                .padding(horizontal = 16.dp)
-                .background(MaterialTheme.colorScheme.onBackground)
-        )
+        item { Spacer(modifier = Modifier.height(16.dp)) }
+
+        item {
+            when (headlines) {
+                is StateFailed -> ReloadState(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .height(134.dp),
+                    onReload = { getHeadlines() }
+                )
+
+                is StateSuccess -> {
+                    if (headlines.data.isNullOrEmpty()) EmptyHeadlineSection()
+                    else SuccessHeadlineSection(data = headlines.data.orEmpty())
+                }
+
+                else -> LoadingHeadlineSection()
+            }
+        }
     }
 }
 
@@ -107,7 +93,7 @@ internal fun HeadlineSection(
 private fun LoadingHeadlineSection() {
     LazyRow(
         modifier = Modifier.padding(horizontal = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+        horizontalArrangement = spacedBy(16.dp)
     ) {
         for (i in 0..5) {
             item {
@@ -118,7 +104,7 @@ private fun LoadingHeadlineSection() {
                             .width(140.dp)
                             .clip(RoundedCornerShape(10.dp))
                             .shimmer()
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                            .background(colorScheme.surfaceContainerHigh)
                     )
 
                     Spacer(modifier = Modifier.height(10.dp))
@@ -129,7 +115,7 @@ private fun LoadingHeadlineSection() {
                             .width(140.dp)
                             .clip(RoundedCornerShape(10.dp))
                             .shimmer()
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
+                            .background(colorScheme.surfaceContainerHigh)
                     )
                 }
             }
@@ -141,39 +127,99 @@ private fun LoadingHeadlineSection() {
 private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
     val state = rememberLazyListState()
     val context = LocalContext.current
+    val headerData = data.take(5)
+    val bottomData = data.drop(5)
 
-    LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp),
-        state = state,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        data.forEach {
-            item {
-                Column {
-                    SubcomposeAsyncImage(
-                        model = ImageRequest.Builder(context)
-                            .allowHardware(true)
-                            .data(it.urlToImage)
-                            .build(),
-                        contentDescription = SplashScreenAttr.LOGO_CONTENT_DESCRIPTION,
-                        modifier = Modifier
-                            .width(140.dp)
-                            .height(82.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .background(MaterialTheme.colorScheme.surfaceContainerHigh)
-                    )
+    Column {
+        LazyRow(
+            contentPadding = PaddingValues(horizontal = 16.dp),
+            state = state,
+            horizontalArrangement = spacedBy(16.dp)
+        ) {
+            headerData.take(5).forEach {
+                item {
+                    Column {
+                        SubcomposeAsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .allowHardware(true)
+                                .data(it.urlToImage)
+                                .build(),
+                            contentDescription = SplashScreenAttr.LOGO_CONTENT_DESCRIPTION,
+                            modifier = Modifier
+                                .width(140.dp)
+                                .height(82.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(colorScheme.surfaceContainerHigh)
+                        )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                    Text(
-                        it.title,
-                        style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        maxLines = 3,
-                        overflow = Ellipsis,
-                        modifier = Modifier.width(140.dp)
-                    )
+                        Text(
+                            it.title,
+                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
+                            color = colorScheme.onBackground,
+                            maxLines = 3,
+                            overflow = Ellipsis,
+                            modifier = Modifier.width(140.dp)
+                        )
+                    }
                 }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(25.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(1.dp)
+                .padding(horizontal = 16.dp)
+                .background(colorScheme.onBackground)
+        )
+
+        bottomData.forEach {
+            Column(
+                modifier = Modifier
+                    .padding(top = 20.dp)
+                    .padding(horizontal = 16.dp)
+                    .fillMaxWidth()
+            ) {
+                Text(
+                    it.source,
+                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
+                    color = colorScheme.onBackground,
+                    maxLines = 1,
+                    overflow = Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    it.title,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = colorScheme.onBackground,
+                    maxLines = 3,
+                    overflow = Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(6.dp))
+
+                Text(
+                    it.publishedAt,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = colorScheme.inverseSurface,
+                    maxLines = 3,
+                    overflow = Ellipsis
+                )
+
+                Spacer(modifier = Modifier.height(20.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(colorScheme.surfaceDim)
+                )
             }
         }
     }
@@ -184,7 +230,9 @@ private fun EmptyHeadlineSection() {
     Column(
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 100.dp)
     ) {
         val composition by rememberLottieComposition(RawRes(R.raw.not_found))
         LottieAnimation(
@@ -196,7 +244,7 @@ private fun EmptyHeadlineSection() {
         Text(
             "No results found",
             style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
-            color = MaterialTheme.colorScheme.onBackground,
+            color = colorScheme.onBackground,
             maxLines = 1,
             textAlign = TextAlign.Center,
             overflow = Ellipsis,
