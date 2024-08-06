@@ -11,9 +11,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
@@ -52,12 +52,14 @@ fun HomeScreen(
         TopAppBar(
             windowInsets = windowInsets,
             title = {
-                Text(
-                    context.getString(R.string.app_name),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    maxLines = 1
-                )
+                Column {
+                    Text(
+                        context.getString(R.string.app_name),
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
+                        color = colorScheme.onBackground,
+                        maxLines = 1
+                    )
+                }
             },
             actions = {
                 Row(
@@ -77,19 +79,16 @@ fun HomeScreen(
                 }
             },
             colors = TopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                actionIconContentColor = MaterialTheme.colorScheme.onBackground,
-                titleContentColor = MaterialTheme.colorScheme.onBackground,
-                scrolledContainerColor = MaterialTheme.colorScheme.background,
-                navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+                containerColor = colorScheme.background,
+                actionIconContentColor = colorScheme.onBackground,
+                titleContentColor = colorScheme.onBackground,
+                scrolledContainerColor = colorScheme.background,
+                navigationIconContentColor = colorScheme.onBackground
             )
         )
-        LazyColumn {
-            item { Spacer(modifier = Modifier.height(16.dp)) }
-            item { SourceSection() }
-            item { Spacer(modifier = Modifier.height(20.dp)) }
-            item { HeadlineSection() }
-            item { Spacer(modifier = Modifier.height(1200.dp)) }
-        }
+        Spacer(modifier = Modifier.height(16.dp))
+        SourceSection()
+        Spacer(modifier = Modifier.height(20.dp))
+        HeadlineSection()
     }
 }
