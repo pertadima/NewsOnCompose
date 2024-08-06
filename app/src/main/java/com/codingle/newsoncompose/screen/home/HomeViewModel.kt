@@ -28,6 +28,9 @@ class HomeViewModel @Inject constructor(
     private val _headlineState: MutableStateFlow<BaseState<List<HeadlineArticleDto>>> = MutableStateFlow(StateInitial)
     val headlineState = _headlineState.asStateFlow()
 
+    private val _selectedTabPosition: MutableStateFlow<Int> = MutableStateFlow(0)
+    val selectedTabPosition = _selectedTabPosition.asStateFlow()
+
     fun getSources() = collectFlow(
         getSourcesUseCase(),
         onSuccess = { _sourcesState.value = StateSuccess(it) },
@@ -35,14 +38,15 @@ class HomeViewModel @Inject constructor(
         onError = { _sourcesState.value = StateFailed(it) }
     )
 
-    fun getHeadlines(source: String = "") = collectFlow(
-        getHeadlineUseCase(source),
-        onSuccess = { _headlineState.value = StateSuccess(it) },
-        onLoading = { _headlineState.value = StateLoading },
-        onError = { _headlineState.value = StateFailed(it) }
-    )
-
-    fun resetHeadlineState() {
-        _headlineState.update { StateInitial }
+    fun getHeadlines(source: String = "") {
+        _headlineState.value = StateInitial
+        collectFlow(
+            getHeadlineUseCase(source),
+            onSuccess = { _headlineState.value = StateSuccess(it) },
+            onLoading = { _headlineState.value = StateLoading },
+            onError = { _headlineState.value = StateFailed(it) }
+        )
     }
+
+    fun updateSelectedTabPosition(position: Int) = _selectedTabPosition.update { position }
 }

@@ -1,6 +1,5 @@
 package com.codingle.newsoncompose.api_headlines.data.repository
 
-import android.util.Log
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.api_headlines.data.entity.HeadlineArticleEntity
 import com.codingle.newsoncompose.api_headlines.data.local.datasource.HeadlineLocalDataSource
@@ -22,12 +21,9 @@ class HeadlineRepositoryImpl @Inject constructor(
         saveCallResult = { data, _ -> localDataSource.insertAllHeadline(data.map { it.mapToEntity() }) }
     )
 
-    override fun getHeadlines(source: String) = if (source.isEmpty()) {
-        Log.e("TAG", "getHeadlines: $source", )
-        getAllHeadlines()
-    } else {
-        Log.e("TAG", "getHeadlines local: $source", )
-        localResultFlow { localDataSource.getHeadlines(source) }.mapToEntity(
+    override fun getHeadlines(source: String) = when (source.isEmpty()) {
+        true -> getAllHeadlines()
+        else -> localResultFlow { localDataSource.getHeadlines(source) }.mapToEntity(
             transformData = { data ->
                 when (data) {
                     is List<*> -> data.map { it.mapToDto() }

@@ -1,6 +1,5 @@
 package com.codingle.newsoncompose.core_data.util
 
-import android.util.Log
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Error
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Loading
@@ -38,7 +37,6 @@ object CoroutineResultHandler {
                 is Loading -> Loading
                 is Success -> {
                     if (localData.data == null || (localData.data is List<*> && localData.data.isEmpty())) {
-                        Log.e("TAG", "resultFlow call remote ${localData.data}")
                         callRemote(networkCall)
                     } else Success(localData.data, false)
                 }
