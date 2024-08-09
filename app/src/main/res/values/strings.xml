@@ -3,4 +3,10 @@
     <string name="sources_all">All</string>
 
     <string name="headlines_today">Today Headlines</string>
+    <string name="headlines_no_result">No result founds</string>
+
+    <string name="search_title">What are you looking for?</string>
+    <string name="search_cancel">Cancel</string>
+    <string name="search_placeholder">Enter your keyword here…</string>
+    <string name="search_recent">Recent Search</string>
 </resources>

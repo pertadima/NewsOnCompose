@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,6 +32,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextAlign
@@ -52,7 +54,7 @@ import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 import com.codingle.newsoncompose.screen.home.HomeViewModel
-import com.codingle.newsoncompose.screen.splash.SplashScreenAttr
+import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.LOGO_CONTENT_DESCRIPTION
 
 
 @Composable
@@ -160,7 +162,7 @@ private fun SuccessHeadlineSection(
                                 .allowHardware(true)
                                 .data(it.urlToImage)
                                 .build(),
-                            contentDescription = SplashScreenAttr.LOGO_CONTENT_DESCRIPTION,
+                            contentDescription = LOGO_CONTENT_DESCRIPTION,
                             modifier = Modifier
                                 .width(140.dp)
                                 .height(82.dp)
@@ -204,33 +206,55 @@ private fun SuccessHeadlineSection(
                         indication = null
                     ) { context.openBrowser(it.url) }
             ) {
-                Text(
-                    it.source,
-                    style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
-                    color = colorScheme.onBackground,
-                    maxLines = 1,
-                    overflow = Ellipsis
-                )
+                Row {
+                    if (it.urlToImage.isNotEmpty() && it.urlToImage.isNotBlank()) {
+                        SubcomposeAsyncImage(
+                            model = ImageRequest.Builder(context)
+                                .allowHardware(true)
+                                .data(it.urlToImage)
+                                .build(),
+                            contentDescription = LOGO_CONTENT_DESCRIPTION,
+                            modifier = Modifier
+                                .width(80.dp)
+                                .height(80.dp)
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(colorScheme.surfaceContainerHigh),
+                            contentScale = Crop
+                        )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.width(16.dp))
+                    }
 
-                Text(
-                    it.title,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = colorScheme.onBackground,
-                    maxLines = 3,
-                    overflow = Ellipsis
-                )
+                    Column(modifier = Modifier.weight(1F)) {
+                        Text(
+                            it.source,
+                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
+                            color = colorScheme.onBackground,
+                            maxLines = 1,
+                            overflow = Ellipsis
+                        )
 
-                Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.height(6.dp))
 
-                Text(
-                    it.publishedAt,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = colorScheme.inverseSurface,
-                    maxLines = 3,
-                    overflow = Ellipsis
-                )
+                        Text(
+                            it.title,
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = colorScheme.onBackground,
+                            maxLines = 3,
+                            overflow = Ellipsis
+                        )
+
+                        Spacer(modifier = Modifier.height(6.dp))
+
+                        Text(
+                            it.publishedAt,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = colorScheme.inverseSurface,
+                            maxLines = 3,
+                            overflow = Ellipsis
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(20.dp))
 
@@ -247,6 +271,7 @@ private fun SuccessHeadlineSection(
 
 @Composable
 private fun EmptyHeadlineSection() {
+    val context = LocalContext.current
     Column(
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Center,
@@ -262,7 +287,7 @@ private fun EmptyHeadlineSection() {
         )
 
         Text(
-            "No results found",
+            context.getString(R.string.headlines_no_result),
             style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
             color = colorScheme.onBackground,
             maxLines = 1,

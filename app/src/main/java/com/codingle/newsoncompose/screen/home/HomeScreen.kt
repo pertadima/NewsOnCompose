@@ -1,6 +1,7 @@
 package com.codingle.newsoncompose.screen.home
 
-import android.util.Log
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.Absolute.spacedBy
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -19,6 +20,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
@@ -27,22 +29,24 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.core_data.data.navigation.Search
 import com.codingle.newsoncompose.screen.home.section.HeadlineSection
 import com.codingle.newsoncompose.screen.home.section.SourceSection
 
 @Composable
 fun HomeRoute(navController: NavHostController, modifier: Modifier) {
-    HomeScreen(modifier = modifier)
-    Log.e("TAG", "HomeRoute: $navController")
+    HomeScreen(modifier = modifier) { navController.navigate(Search) }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier,
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    onNavigateToSearch: () -> Unit
 ) {
     val context = LocalContext.current
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column(
         modifier = modifier
@@ -75,6 +79,10 @@ fun HomeScreen(
                         modifier = Modifier
                             .width(18.dp)
                             .height(18.dp)
+                            .clickable(
+                                interactionSource = interactionSource,
+                                indication = null
+                            ) { onNavigateToSearch() }
                     )
                 }
             },
