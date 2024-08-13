@@ -5,4 +5,5 @@ import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 
 interface HeadlineRemoteDataSource {
     suspend fun getHeadline(): ApiResult<HeadlineResponse>
+    suspend fun searchHeadline(query: String): ApiResult<HeadlineResponse>
 }

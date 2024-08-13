@@ -8,4 +8,6 @@ class HeadlineRemoteDataSourceImpl @Inject constructor(
     private val api: HeadlineApi
 ) : BaseDataSource(), HeadlineRemoteDataSource {
     override suspend fun getHeadline() = getResultWithSingleObject { api.getHeadline() }
+
+    override suspend fun searchHeadline(query: String) = getResultWithSingleObject { api.searchHeadline(query) }
 }

@@ -7,4 +7,5 @@ interface HeadlineLocalDataSource {
     suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>)
     suspend fun getAllHeadlines(): ApiResult<List<HeadlineArticleEntity>?>
     suspend fun getHeadlines(source: String): ApiResult<List<HeadlineArticleEntity>?>
+    suspend fun searchHeadline(query: String): ApiResult<List<HeadlineArticleEntity>?>
 }

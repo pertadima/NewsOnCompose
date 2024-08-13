@@ -16,4 +16,8 @@ class HeadlineLocalDataSourceImpl @Inject constructor(
     override suspend fun getHeadlines(source: String) = getLocalDataWithSingleObject {
         database.headlineDao().getHeadlines(source)
     }
+
+    override suspend fun searchHeadline(query: String) = getLocalDataWithSingleObject {
+        database.headlineDao().searchHeadline(query)
+    }
 }

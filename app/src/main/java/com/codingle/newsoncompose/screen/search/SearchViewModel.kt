@@ -25,9 +25,7 @@ class SearchViewModel @Inject constructor(
 
     fun insertKeyword(keyword: String) = collectFlow(
         saveKeywordUseCase(keyword),
-        onSuccess = {
-
-        }
+        onSuccess = { getKeywords() }
     )
 
     fun getKeywords() = collectFlow(
