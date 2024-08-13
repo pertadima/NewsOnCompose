@@ -16,4 +16,7 @@ interface HeadlineDao {
 
     @Insert(onConflict = REPLACE)
     suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>)
+
+    @Query("SELECT * FROM tbl_headline WHERE title LIKE '%' || :query || '%' OR source LIKE '%' || :query || '%'")
+    suspend fun searchHeadline(query: String): List<HeadlineArticleEntity>?
 }

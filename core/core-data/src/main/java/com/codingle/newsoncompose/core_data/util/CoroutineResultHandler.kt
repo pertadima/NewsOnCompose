@@ -1,5 +1,6 @@
 package com.codingle.newsoncompose.core_data.util
 
+import android.util.Log
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Error
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Loading
@@ -21,7 +22,10 @@ object CoroutineResultHandler {
             when (val localData = localCall()) {
                 is Error -> Error(localData.error)
                 is Loading -> Loading
-                is Success -> Success(localData.data, false)
+                is Success -> {
+                    Log.e("TAG", "localResultFlow: ${localData.data}", )
+                    Success(localData.data, false)
+                }
             }
         )
     }.flowOn(IO)

@@ -7,4 +7,5 @@ import kotlinx.coroutines.flow.Flow
 interface HeadlineRepository {
     fun getRemoteHeadlines(): Flow<ApiResult<List<HeadlineArticleDto>>>
     fun getHeadlines(source: String): Flow<ApiResult<List<HeadlineArticleDto>>>
+    fun searchHeadlines(query: String): Flow<ApiResult<List<HeadlineArticleDto>>>
 }

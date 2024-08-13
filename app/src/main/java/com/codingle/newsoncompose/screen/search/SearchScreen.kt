@@ -50,12 +50,15 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
+import com.codingle.newsoncompose.core_data.data.navigation.SearchResult
 
 @Composable
 fun SearchRoute(navController: NavHostController, modifier: Modifier) {
-    SearchScreen(modifier = modifier) {
-        navController.popBackStack()
-    }
+    SearchScreen(
+        modifier = modifier,
+        toSearchResult = { navController.navigate(SearchResult(it)) },
+        onNavigateBack = { navController.popBackStack() }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -64,6 +67,7 @@ fun SearchScreen(
     viewModel: SearchViewModel = hiltViewModel(),
     modifier: Modifier,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    toSearchResult: (String) -> Unit,
     onNavigateBack: () -> Unit
 ) = with(viewModel) {
     val context = LocalContext.current
@@ -112,6 +116,7 @@ fun SearchScreen(
                 keyboardActions = KeyboardActions(onDone = {
                     keyboard?.hide()
                     if (searchText.isNotEmpty() && searchText.isNotBlank()) insertKeyword(searchText)
+                    toSearchResult(searchText)
                     searchText = ""
                 })
             ) {
@@ -188,7 +193,12 @@ fun SearchScreen(
                 contentPadding = PaddingValues(horizontal = 16.dp)
             ) {
                 items(keywords.data.orEmpty().size) {
-                    Column {
+                    Column(
+                        modifier = Modifier.clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) { toSearchResult(keywords.data?.get(it)?.keyword.orEmpty()) }
+                    ) {
                         Spacer(modifier = Modifier.height(12.dp))
 
                         Text(

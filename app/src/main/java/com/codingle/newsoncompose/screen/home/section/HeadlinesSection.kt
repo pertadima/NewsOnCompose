@@ -1,9 +1,5 @@
 package com.codingle.newsoncompose.screen.home.section
 
-import android.content.Context
-import android.content.Intent
-import android.content.Intent.ACTION_VIEW
-import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -48,6 +44,7 @@ import com.airbnb.lottie.compose.LottieConstants.IterateForever
 import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
+import com.codingle.newsoncompose.core.util.Util.openBrowser
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
@@ -275,14 +272,15 @@ private fun EmptyHeadlineSection() {
     Column(
         horizontalAlignment = CenterHorizontally,
         verticalArrangement = Center,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(top = 100.dp)
+        modifier = Modifier.fillMaxWidth()
     ) {
         val composition by rememberLottieComposition(RawRes(R.raw.not_found))
         LottieAnimation(
             composition,
-            modifier = Modifier.width(180.dp),
+            modifier = Modifier
+                .width(200.dp)
+                .height(200.dp)
+                .padding(top = 100.dp),
             iterations = IterateForever,
         )
 
@@ -290,15 +288,8 @@ private fun EmptyHeadlineSection() {
             context.getString(R.string.headlines_no_result),
             style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
             color = colorScheme.onBackground,
-            maxLines = 1,
-            textAlign = TextAlign.Center,
             overflow = Ellipsis,
-            modifier = Modifier.width(140.dp)
+            textAlign = TextAlign.Center
         )
     }
-}
-
-private fun Context.openBrowser(url: String) {
-    val browserIntent = Intent(ACTION_VIEW, Uri.parse(url))
-    startActivity(browserIntent)
 }
