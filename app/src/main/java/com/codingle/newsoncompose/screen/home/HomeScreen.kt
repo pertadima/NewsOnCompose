@@ -35,13 +35,18 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.core_data.data.navigation.Search
+import com.codingle.newsoncompose.core_data.data.navigation.WebView
 import com.codingle.newsoncompose.screen.home.section.HeadlineSection
 import com.codingle.newsoncompose.screen.home.section.SourceSection
 
 @Composable
 fun HomeRoute(navController: NavHostController, modifier: Modifier) {
-    HomeScreen(modifier = modifier) { navController.navigate(Search) }
+    HomeScreen(modifier = modifier,
+        onNavigateToSearch = { navController.navigate(Search) },
+        onNewsClicked = { navController.navigate(WebView(it.title, it.url)) }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -49,7 +54,8 @@ fun HomeRoute(navController: NavHostController, modifier: Modifier) {
 fun HomeScreen(
     modifier: Modifier,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    onNavigateToSearch: () -> Unit
+    onNavigateToSearch: () -> Unit,
+    onNewsClicked: (HeadlineArticleDto) -> Unit
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -110,7 +116,7 @@ fun HomeScreen(
             Spacer(modifier = Modifier.height(16.dp))
             SourceSection(isRefreshing = pullToRefreshState.isRefreshing)
             Spacer(modifier = Modifier.height(20.dp))
-            HeadlineSection(isRefreshing = pullToRefreshState.isRefreshing)
+            HeadlineSection(isRefreshing = pullToRefreshState.isRefreshing, onNewsClicked = onNewsClicked)
         }
         PullToRefreshContainer(
             modifier = Modifier.align(TopCenter),
