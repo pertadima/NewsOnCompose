@@ -125,7 +125,6 @@ fun SearchResultScreen(
 
 @Composable
 private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>, onNewsClicked: (HeadlineArticleDto) -> Unit) {
-    val context = LocalContext.current
     LazyColumn {
         items(data.size) {
             VerticalHeadlineItem(
