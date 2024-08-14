@@ -35,7 +35,6 @@ import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieCompositionSpec.RawRes
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
-import com.codingle.newsoncompose.core.util.Util.openBrowser
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
@@ -50,7 +49,8 @@ import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.LOGO_CONTENT_DE
 @Composable
 internal fun HeadlineSection(
     viewModel: HomeViewModel = hiltViewModel(),
-    isRefreshing: Boolean
+    isRefreshing: Boolean,
+    onNewsClicked: (HeadlineArticleDto) -> Unit
 ) = with(viewModel) {
     val context = LocalContext.current
     val headlines = headlineState.collectAsStateWithLifecycle().value
@@ -85,7 +85,7 @@ internal fun HeadlineSection(
                         RawRes(R.raw.not_found),
                         context.getString(R.string.headlines_no_result)
                     )
-                    else SuccessHeadlineSection(data = headlines.data.orEmpty())
+                    else SuccessHeadlineSection(data = headlines.data.orEmpty(), onNewsClicked = onNewsClicked)
                 }
 
                 else -> LoadingHeadlineSection()
@@ -132,6 +132,7 @@ private fun LoadingHeadlineSection() {
 private fun SuccessHeadlineSection(
     data: List<HeadlineArticleDto>,
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
+    onNewsClicked: (HeadlineArticleDto) -> Unit
 ) {
     val state = rememberLazyListState()
     val context = LocalContext.current
@@ -150,7 +151,7 @@ private fun SuccessHeadlineSection(
                         modifier = Modifier.clickable(
                             interactionSource = interactionSource,
                             indication = null
-                        ) { context.openBrowser(it.url) }
+                        ) { onNewsClicked(it) }
                     ) {
                         SubcomposeAsyncImage(
                             model = ImageRequest.Builder(context)
@@ -196,7 +197,7 @@ private fun SuccessHeadlineSection(
                 source = it.source,
                 publishedAt = it.publishedAt,
                 urlToImage = it.urlToImage
-            ) { context.openBrowser(it.url) }
+            ) { onNewsClicked(it) }
         }
     }
 }

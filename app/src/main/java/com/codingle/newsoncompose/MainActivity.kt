@@ -17,11 +17,13 @@ import com.codingle.newsoncompose.core_data.data.navigation.Home
 import com.codingle.newsoncompose.core_data.data.navigation.Search
 import com.codingle.newsoncompose.core_data.data.navigation.SearchResult
 import com.codingle.newsoncompose.core_data.data.navigation.Splash
+import com.codingle.newsoncompose.core_data.data.navigation.WebView
 import com.codingle.newsoncompose.core_ui.theme.NewsOnComposeTheme
 import com.codingle.newsoncompose.screen.home.HomeRoute
 import com.codingle.newsoncompose.screen.search.SearchRoute
 import com.codingle.newsoncompose.screen.searchresult.SearchResultRoute
 import com.codingle.newsoncompose.screen.splash.SplashRoute
+import com.codingle.newsoncompose.screen.webview.WebViewRoute
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -53,6 +55,11 @@ fun MainScreen(modifier: Modifier) {
         composable<SearchResult> {
             val searchResult: SearchResult = it.toRoute()
             SearchResultRoute(navController, modifier, searchResult.keyword)
+        }
+
+        composable<WebView> {
+            val webView: WebView = it.toRoute()
+            WebViewRoute(navController, modifier, webView.title, webView.url)
         }
     }
 }

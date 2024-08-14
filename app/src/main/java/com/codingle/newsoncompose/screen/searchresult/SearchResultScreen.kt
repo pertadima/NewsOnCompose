@@ -32,19 +32,22 @@ import androidx.navigation.NavHostController
 import com.airbnb.lottie.compose.LottieCompositionSpec.RawRes
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
-import com.codingle.newsoncompose.core.util.Util.openBrowser
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_data.data.navigation.Home
+import com.codingle.newsoncompose.core_data.data.navigation.WebView
 import com.codingle.newsoncompose.core_ui.component.headline.EmptyHeadline
 import com.codingle.newsoncompose.core_ui.component.headline.VerticalHeadlineItem
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 
 @Composable
 fun SearchResultRoute(navController: NavHostController, modifier: Modifier, keyword: String) {
-    SearchResultScreen(modifier = modifier, keyword = keyword) {
-        navController.popBackStack(Home, false)
-    }
+    SearchResultScreen(
+        modifier = modifier,
+        keyword = keyword,
+        onNavigateBack = { navController.popBackStack(Home, false) },
+        onNewsClicked = { navController.navigate(WebView(it.title, it.url)) }
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,7 +57,8 @@ fun SearchResultScreen(
     modifier: Modifier,
     keyword: String,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onNewsClicked: (HeadlineArticleDto) -> Unit
 ) = with(viewModel) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
@@ -102,7 +106,7 @@ fun SearchResultScreen(
             is StateSuccess -> {
                 if (headlines.data.orEmpty().isEmpty()) {
                     EmptyHeadline(RawRes(R.raw.not_found), context.getString(R.string.headlines_no_result))
-                } else SuccessHeadlineSection(headlines.data.orEmpty())
+                } else SuccessHeadlineSection(headlines.data.orEmpty(), onNewsClicked)
             }
 
             is StateFailed -> ReloadState(
@@ -120,7 +124,7 @@ fun SearchResultScreen(
 }
 
 @Composable
-private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
+private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>, onNewsClicked: (HeadlineArticleDto) -> Unit) {
     val context = LocalContext.current
     LazyColumn {
         items(data.size) {
@@ -129,7 +133,7 @@ private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>) {
                 source = data[it].source,
                 publishedAt = data[it].publishedAt,
                 urlToImage = data[it].urlToImage
-            ) { context.openBrowser(data[it].url) }
+            ) { onNewsClicked(data[it]) }
         }
     }
 }
