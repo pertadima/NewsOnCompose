@@ -30,13 +30,15 @@ import com.codingle.newsoncompose.screen.home.HomeViewModel
 
 @Composable
 internal fun SourceSection(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    isRefreshing: Boolean
 ) = with(viewModel) {
     val context = LocalContext.current
     val selectedItemPos = selectedTabPosition.collectAsStateWithLifecycle().value
     val sources = sourcesState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) { if (sources is StateInitial) getSources() }
+    LaunchedEffect(isRefreshing) { if (isRefreshing) getSources() }
 
     when (sources) {
         is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = { getSources() })

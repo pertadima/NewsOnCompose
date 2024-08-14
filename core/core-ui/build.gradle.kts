@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.codingle.core_ui"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24
@@ -42,6 +42,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
 
+    implementation(libs.lottie)
     implementation(libs.coil.compose)
 
     testImplementation(libs.junit)
