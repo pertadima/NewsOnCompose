@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.codingle.api_headlines"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         minSdk = 24

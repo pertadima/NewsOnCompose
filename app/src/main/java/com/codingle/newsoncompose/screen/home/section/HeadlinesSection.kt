@@ -3,12 +3,10 @@ package com.codingle.newsoncompose.screen.home.section
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement.Center
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -23,31 +21,26 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment.Companion.CenterHorizontally
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.layout.ContentScale.Companion.Crop
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
-import com.airbnb.lottie.compose.LottieAnimation
 import com.airbnb.lottie.compose.LottieCompositionSpec.RawRes
-import com.airbnb.lottie.compose.LottieConstants.IterateForever
-import com.airbnb.lottie.compose.rememberLottieComposition
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.core.util.Util.openBrowser
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
+import com.codingle.newsoncompose.core_ui.component.headline.EmptyHeadline
+import com.codingle.newsoncompose.core_ui.component.headline.VerticalHeadlineItem
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 import com.codingle.newsoncompose.screen.home.HomeViewModel
@@ -56,12 +49,14 @@ import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.LOGO_CONTENT_DE
 
 @Composable
 internal fun HeadlineSection(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    isRefreshing: Boolean
 ) = with(viewModel) {
     val context = LocalContext.current
     val headlines = headlineState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) { if (headlines is StateInitial) getHeadlines() }
+    LaunchedEffect(isRefreshing) { if (isRefreshing) getHeadlines() }
 
     LazyColumn {
         item {
@@ -86,7 +81,10 @@ internal fun HeadlineSection(
                 )
 
                 is StateSuccess -> {
-                    if (headlines.data.isNullOrEmpty()) EmptyHeadlineSection()
+                    if (headlines.data.isNullOrEmpty()) EmptyHeadline(
+                        RawRes(R.raw.not_found),
+                        context.getString(R.string.headlines_no_result)
+                    )
                     else SuccessHeadlineSection(data = headlines.data.orEmpty())
                 }
 
@@ -193,103 +191,12 @@ private fun SuccessHeadlineSection(
         )
 
         bottomData.forEach {
-            Column(
-                modifier = Modifier
-                    .padding(top = 20.dp)
-                    .padding(horizontal = 16.dp)
-                    .fillMaxWidth()
-                    .clickable(
-                        interactionSource = interactionSource,
-                        indication = null
-                    ) { context.openBrowser(it.url) }
-            ) {
-                Row {
-                    if (it.urlToImage.isNotEmpty() && it.urlToImage.isNotBlank()) {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .allowHardware(true)
-                                .data(it.urlToImage)
-                                .build(),
-                            contentDescription = LOGO_CONTENT_DESCRIPTION,
-                            modifier = Modifier
-                                .width(80.dp)
-                                .height(80.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(colorScheme.surfaceContainerHigh),
-                            contentScale = Crop
-                        )
-
-                        Spacer(modifier = Modifier.width(16.dp))
-                    }
-
-                    Column(modifier = Modifier.weight(1F)) {
-                        Text(
-                            it.source,
-                            style = MaterialTheme.typography.labelSmall.copy(fontWeight = W600),
-                            color = colorScheme.onBackground,
-                            maxLines = 1,
-                            overflow = Ellipsis
-                        )
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            it.title,
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = colorScheme.onBackground,
-                            maxLines = 3,
-                            overflow = Ellipsis
-                        )
-
-                        Spacer(modifier = Modifier.height(6.dp))
-
-                        Text(
-                            it.publishedAt,
-                            style = MaterialTheme.typography.bodySmall,
-                            color = colorScheme.inverseSurface,
-                            maxLines = 3,
-                            overflow = Ellipsis
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(20.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(colorScheme.surfaceDim)
-                )
-            }
+            VerticalHeadlineItem(
+                title = it.title,
+                source = it.source,
+                publishedAt = it.publishedAt,
+                urlToImage = it.urlToImage
+            ) { context.openBrowser(it.url) }
         }
-    }
-}
-
-@Composable
-private fun EmptyHeadlineSection() {
-    val context = LocalContext.current
-    Column(
-        horizontalAlignment = CenterHorizontally,
-        verticalArrangement = Center,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        val composition by rememberLottieComposition(RawRes(R.raw.not_found))
-        LottieAnimation(
-            composition,
-            modifier = Modifier
-                .width(200.dp)
-                .height(200.dp)
-                .padding(top = 100.dp),
-            iterations = IterateForever,
-        )
-
-        Text(
-            context.getString(R.string.headlines_no_result),
-            style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
-            color = colorScheme.onBackground,
-            overflow = Ellipsis,
-            textAlign = TextAlign.Center
-        )
     }
 }
