@@ -26,6 +26,7 @@ import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.chip.ChipGroup
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
+import com.codingle.newsoncompose.screen.home.HomeScreenAttr.LOADING_PLACEHOLDER_SIZE
 import com.codingle.newsoncompose.screen.home.HomeViewModel
 
 @Composable
@@ -58,7 +59,7 @@ private fun LoadingSourceSection() {
         modifier = Modifier.padding(horizontal = 16.dp),
         horizontalArrangement = spacedBy(5.dp),
     ) {
-        for (i in 0..5) {
+        repeat(LOADING_PLACEHOLDER_SIZE) {
             item {
                 Box(
                     modifier = Modifier

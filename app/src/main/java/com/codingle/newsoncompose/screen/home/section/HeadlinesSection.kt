@@ -1,8 +1,6 @@
 package com.codingle.newsoncompose.screen.home.section
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement.spacedBy
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,17 +19,13 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
-import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 import com.airbnb.lottie.compose.LottieCompositionSpec.RawRes
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
@@ -39,11 +33,13 @@ import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.headline.EmptyHeadline
+import com.codingle.newsoncompose.core_ui.component.headline.HorizontalHeadlineItem
 import com.codingle.newsoncompose.core_ui.component.headline.VerticalHeadlineItem
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
+import com.codingle.newsoncompose.screen.home.HomeScreenAttr.HEADER_SIZE
+import com.codingle.newsoncompose.screen.home.HomeScreenAttr.LOADING_PLACEHOLDER_SIZE
 import com.codingle.newsoncompose.screen.home.HomeViewModel
-import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.LOGO_CONTENT_DESCRIPTION
 
 
 @Composable
@@ -100,7 +96,7 @@ private fun LoadingHeadlineSection() {
         modifier = Modifier.padding(horizontal = 16.dp),
         horizontalArrangement = spacedBy(16.dp)
     ) {
-        for (i in 0..5) {
+        repeat(LOADING_PLACEHOLDER_SIZE) {
             item {
                 Column {
                     Box(
@@ -131,13 +127,12 @@ private fun LoadingHeadlineSection() {
 @Composable
 private fun SuccessHeadlineSection(
     data: List<HeadlineArticleDto>,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     onNewsClicked: (HeadlineArticleDto) -> Unit
 ) {
     val state = rememberLazyListState()
     val context = LocalContext.current
-    val headerData = data.take(5)
-    val bottomData = data.drop(5)
+    val headerData = data.take(HEADER_SIZE)
+    val bottomData = data.drop(HEADER_SIZE)
 
     Column {
         LazyRow(
@@ -145,38 +140,12 @@ private fun SuccessHeadlineSection(
             state = state,
             horizontalArrangement = spacedBy(16.dp)
         ) {
-            headerData.take(5).forEach {
+            headerData.forEach {
                 item {
-                    Column(
-                        modifier = Modifier.clickable(
-                            interactionSource = interactionSource,
-                            indication = null
-                        ) { onNewsClicked(it) }
-                    ) {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .allowHardware(true)
-                                .data(it.urlToImage)
-                                .build(),
-                            contentDescription = LOGO_CONTENT_DESCRIPTION,
-                            modifier = Modifier
-                                .width(140.dp)
-                                .height(82.dp)
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(colorScheme.surfaceContainerHigh)
-                        )
-
-                        Spacer(modifier = Modifier.height(10.dp))
-
-                        Text(
-                            it.title,
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
-                            color = colorScheme.onBackground,
-                            maxLines = 3,
-                            overflow = Ellipsis,
-                            modifier = Modifier.width(140.dp)
-                        )
-                    }
+                    HorizontalHeadlineItem(
+                        title = it.title,
+                        urlToImage = it.urlToImage
+                    ) { onNewsClicked(it) }
                 }
             }
         }

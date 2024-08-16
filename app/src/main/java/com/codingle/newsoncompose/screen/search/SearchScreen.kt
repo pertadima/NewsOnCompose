@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -21,7 +22,8 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
@@ -35,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
@@ -49,6 +51,7 @@ import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.api_search.data.dto.SearchKeywordDto
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_data.data.navigation.SearchResult
 
@@ -71,10 +74,9 @@ fun SearchScreen(
     onNavigateBack: () -> Unit
 ) = with(viewModel) {
     val context = LocalContext.current
-    val keyboard = LocalSoftwareKeyboardController.current
-
     val interactionSource = remember { MutableInteractionSource() }
-    var searchText by remember { mutableStateOf("") }
+
+    val keywords = keywordsState.collectAsStateWithLifecycle().value
 
     LaunchedEffect(Unit) { getKeywords() }
 
@@ -89,83 +91,27 @@ fun SearchScreen(
                 Column {
                     Text(
                         context.getString(R.string.search_title),
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
-                        color = MaterialTheme.colorScheme.onBackground,
+                        style = typography.titleMedium.copy(fontWeight = W600),
+                        color = colorScheme.onBackground,
                         maxLines = 1
                     )
                 }
             },
             colors = TopAppBarColors(
-                containerColor = MaterialTheme.colorScheme.background,
-                actionIconContentColor = MaterialTheme.colorScheme.onBackground,
-                titleContentColor = MaterialTheme.colorScheme.onBackground,
-                scrolledContainerColor = MaterialTheme.colorScheme.background,
-                navigationIconContentColor = MaterialTheme.colorScheme.onBackground
+                containerColor = colorScheme.background,
+                actionIconContentColor = colorScheme.onBackground,
+                titleContentColor = colorScheme.onBackground,
+                scrolledContainerColor = colorScheme.background,
+                navigationIconContentColor = colorScheme.onBackground
             )
         )
         Row(modifier = Modifier.padding(horizontal = 16.dp), verticalAlignment = CenterVertically) {
-            BasicTextField(
-                modifier = Modifier.weight(1F),
-                value = searchText,
-                singleLine = true,
-                onValueChange = { searchText = it },
-                keyboardOptions = KeyboardOptions.Default.copy(
-                    keyboardType = Text,
-                    imeAction = Done
-                ),
-                keyboardActions = KeyboardActions(onDone = {
-                    keyboard?.hide()
-                    if (searchText.isNotEmpty() && searchText.isNotBlank()) insertKeyword(searchText)
-                    toSearchResult(searchText)
-                    searchText = ""
-                })
-            ) {
-                TextFieldDefaults.DecorationBox(
-                    enabled = true,
-                    interactionSource = interactionSource,
-                    singleLine = true,
-                    visualTransformation = None,
-                    value = searchText,
-                    innerTextField = it,
-                    shape = RoundedCornerShape(10.dp),
-                    placeholder = {
-                        Text(
-                            context.getString(R.string.search_placeholder),
-                            style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
-                            color = MaterialTheme.colorScheme.surfaceContainerHighest,
-                            maxLines = 1
-                        )
-                    },
-                    contentPadding = PaddingValues(12.dp),
-                    colors = TextFieldDefaults.colors(
-                        cursorColor = MaterialTheme.colorScheme.onBackground,
-                        focusedIndicatorColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        disabledIndicatorColor = Color.Transparent,
-                        errorIndicatorColor = Color.Transparent,
-                        focusedContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        disabledContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        errorContainerColor = MaterialTheme.colorScheme.surfaceContainer,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainer
-                    ),
-                    leadingIcon = {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .allowHardware(true)
-                                .data(R.drawable.ic_search)
-                                .build(),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .width(18.dp)
-                                .height(18.dp)
-                        )
-                    }
-                )
-            }
+            SearchText(viewModel, toSearchResult)
+
             Text(
                 context.getString(R.string.search_cancel),
-                style = MaterialTheme.typography.bodySmall.copy(fontWeight = W600),
-                color = MaterialTheme.colorScheme.primary,
+                style = typography.bodySmall.copy(fontWeight = W600),
+                color = colorScheme.primary,
                 maxLines = 1,
                 modifier = Modifier
                     .padding(start = 20.dp)
@@ -178,46 +124,124 @@ fun SearchScreen(
 
         Text(
             context.getString(R.string.search_recent),
-            style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
-            color = MaterialTheme.colorScheme.onBackground,
+            style = typography.titleMedium.copy(fontWeight = W600),
+            color = colorScheme.onBackground,
             maxLines = 1,
             modifier = Modifier
                 .padding(horizontal = 16.dp)
                 .padding(top = 15.dp)
         )
 
-        val keywords = keywordsState.collectAsStateWithLifecycle().value
-        if (keywords is StateSuccess) {
-            Box(modifier = Modifier.height(20.dp))
-            LazyColumn(
-                contentPadding = PaddingValues(horizontal = 16.dp)
+
+        if (keywords is StateSuccess) KeywordsStateSuccess(keywords.data.orEmpty(), toSearchResult)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun RowScope.SearchText(
+    viewModel: SearchViewModel,
+    toSearchResult: (String) -> Unit,
+) {
+    var searchText by remember { mutableStateOf("") }
+    val keyboard = LocalSoftwareKeyboardController.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val context = LocalContext.current
+
+    BasicTextField(
+        modifier = Modifier.weight(1F),
+        value = searchText,
+        singleLine = true,
+        onValueChange = { searchText = it },
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = Text,
+            imeAction = Done
+        ),
+        keyboardActions = KeyboardActions(onDone = {
+            keyboard?.hide()
+            if (searchText.isNotEmpty() && searchText.isNotBlank()) viewModel.insertKeyword(searchText)
+            toSearchResult(searchText)
+            searchText = ""
+        })
+    ) {
+        TextFieldDefaults.DecorationBox(
+            enabled = true,
+            interactionSource = interactionSource,
+            singleLine = true,
+            visualTransformation = None,
+            value = searchText,
+            innerTextField = it,
+            shape = RoundedCornerShape(10.dp),
+            placeholder = {
+                Text(
+                    context.getString(R.string.search_placeholder),
+                    style = typography.bodySmall.copy(fontWeight = W600),
+                    color = colorScheme.surfaceContainerHighest,
+                    maxLines = 1
+                )
+            },
+            contentPadding = PaddingValues(12.dp),
+            colors = TextFieldDefaults.colors(
+                cursorColor = colorScheme.onBackground,
+                focusedIndicatorColor = Transparent,
+                unfocusedIndicatorColor = Transparent,
+                disabledIndicatorColor = Transparent,
+                errorIndicatorColor = Transparent,
+                focusedContainerColor = colorScheme.surfaceContainer,
+                disabledContainerColor = colorScheme.surfaceContainer,
+                errorContainerColor = colorScheme.surfaceContainer,
+                unfocusedContainerColor = colorScheme.surfaceContainer
+            ),
+            leadingIcon = {
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .allowHardware(true)
+                        .data(R.drawable.ic_search)
+                        .build(),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(18.dp)
+                        .height(18.dp)
+                )
+            }
+        )
+    }
+}
+
+@Composable
+private fun KeywordsStateSuccess(
+    keywords: List<SearchKeywordDto>,
+    toSearchResult: (String) -> Unit
+) {
+    val interactionSource = remember { MutableInteractionSource() }
+    Box(modifier = Modifier.height(20.dp))
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp)
+    ) {
+        items(keywords.size) {
+            Column(
+                modifier = Modifier.clickable(
+                    interactionSource = interactionSource,
+                    indication = null
+                ) { toSearchResult(keywords[it].keyword) }
             ) {
-                items(keywords.data.orEmpty().size) {
-                    Column(
-                        modifier = Modifier.clickable(
-                            interactionSource = interactionSource,
-                            indication = null
-                        ) { toSearchResult(keywords.data?.get(it)?.keyword.orEmpty()) }
-                    ) {
-                        Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                        Text(
-                            keywords.data?.get(it)?.keyword.orEmpty(),
-                            style = MaterialTheme.typography.titleSmall,
-                            color = MaterialTheme.colorScheme.onBackground,
-                            maxLines = 1
-                        )
+                Text(
+                    keywords[it].keyword,
+                    style = typography.titleSmall,
+                    color = colorScheme.onBackground,
+                    maxLines = 1
+                )
 
-                        Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
-                        Box(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp)
-                                .background(MaterialTheme.colorScheme.surfaceDim)
-                        )
-                    }
-                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(1.dp)
+                        .background(colorScheme.surfaceDim)
+                )
             }
         }
     }
