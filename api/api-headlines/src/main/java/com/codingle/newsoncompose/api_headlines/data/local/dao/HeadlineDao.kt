@@ -8,15 +8,16 @@ import com.codingle.newsoncompose.api_headlines.data.entity.HeadlineArticleEntit
 
 @Dao
 interface HeadlineDao {
-    @Query("SELECT * FROM tbl_headline")
+    @Query("SELECT * FROM tbl_headline ORDER BY publishedAt DESC")
     suspend fun getAllHeadlines(): List<HeadlineArticleEntity>?
 
-    @Query("SELECT * FROM tbl_headline WHERE source = :newsSource")
+    @Query("SELECT * FROM tbl_headline WHERE source = :newsSource ORDER BY publishedAt DESC")
     suspend fun getHeadlines(newsSource: String): List<HeadlineArticleEntity>?
 
     @Insert(onConflict = REPLACE)
     suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>)
 
-    @Query("SELECT * FROM tbl_headline WHERE title LIKE '%' || :query || '%' OR source LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM tbl_headline WHERE title LIKE '%' || :query || '%' OR source LIKE '%' || :query || '%' " +
+            "ORDER BY publishedAt DESC")
     suspend fun searchHeadline(query: String): List<HeadlineArticleEntity>?
 }

@@ -3,6 +3,8 @@ package com.codingle.newsoncompose.api_headlines.di
 import com.codingle.newsoncompose.api_headlines.data.repository.HeadlineRepository
 import com.codingle.newsoncompose.api_headlines.domain.get.GetHeadlineUseCase
 import com.codingle.newsoncompose.api_headlines.domain.get.GetHeadlineUseCaseImpl
+import com.codingle.newsoncompose.api_headlines.domain.get.GetRemoteHeadlineUseCase
+import com.codingle.newsoncompose.api_headlines.domain.get.GetRemoteHeadlineUseCaseImpl
 import com.codingle.newsoncompose.api_headlines.domain.search.SearchHeadlineUseCase
 import com.codingle.newsoncompose.api_headlines.domain.search.SearchHeadlineUseCaseImpl
 import dagger.Module
@@ -25,4 +27,10 @@ class UseCaseModule {
     internal fun provideSearchHeadlinesUseCase(
         repository: HeadlineRepository
     ): SearchHeadlineUseCase = SearchHeadlineUseCaseImpl(repository)
+
+    @Provides
+    @Singleton
+    internal fun provideGetRemoteHeadlinesUseCase(
+        repository: HeadlineRepository
+    ): GetRemoteHeadlineUseCase = GetRemoteHeadlineUseCaseImpl(repository)
 }
