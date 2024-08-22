@@ -37,6 +37,9 @@ android {
 dependencies {
 
     implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.hilt.common)
+    implementation(libs.androidx.hilt.work)
+    ksp(libs.androidx.hilt.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -48,6 +51,7 @@ dependencies {
     implementation(libs.room)
     implementation(libs.room.ktx)
     ksp(libs.roomCompiler)
+    implementation(libs.workManager)
 
     // local module
     implementation(project(":core-data"))
