@@ -10,43 +10,35 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_sources.data.dto.SourceDto
+import com.codingle.newsoncompose.core_data.base.BaseState
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
-import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.chip.ChipGroup
 import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 import com.codingle.newsoncompose.screen.home.HomeScreenAttr.LOADING_PLACEHOLDER_SIZE
-import com.codingle.newsoncompose.screen.home.HomeViewModel
 
 @Composable
 internal fun SourceSection(
-    viewModel: HomeViewModel = hiltViewModel(),
-    isRefreshing: Boolean
-) = with(viewModel) {
+    sources: BaseState<List<SourceDto>>,
+    selectedItemPos: Int,
+    onReload: () -> Unit,
+    onUpdateSelectedTabPosition: (Int, String) -> Unit
+) {
     val context = LocalContext.current
-    val selectedItemPos = selectedTabPosition.collectAsStateWithLifecycle().value
-    val sources = sourcesState.collectAsStateWithLifecycle().value
-
-    LaunchedEffect(Unit) { if (sources is StateInitial) getSources() }
-    LaunchedEffect(isRefreshing) { if (isRefreshing) getSources() }
 
     when (sources) {
-        is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = { getSources() })
+        is StateFailed -> ReloadState(modifier = Modifier.padding(horizontal = 16.dp), onReload = { onReload() })
         is StateSuccess -> SuccessSourceSection(sources.data.orEmpty(), selectedItemPos) { pos, item ->
-            updateSelectedTabPosition(pos)
             val source = if (item == context.getString(R.string.sources_all)) "" else item
-            getHeadlines(source)
+            onUpdateSelectedTabPosition(pos, source)
         }
 
         else -> LoadingSourceSection()

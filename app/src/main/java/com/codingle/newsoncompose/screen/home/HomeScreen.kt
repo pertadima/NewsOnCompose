@@ -20,17 +20,15 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.material3.pulltorefresh.PullToRefreshContainer
-import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment.Companion.TopCenter
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
@@ -49,81 +47,97 @@ fun HomeRoute(navController: NavHostController, modifier: Modifier) {
     )
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
     modifier: Modifier,
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     onNavigateToSearch: () -> Unit,
     onNewsClicked: (HeadlineArticleDto) -> Unit
-) {
-    val context = LocalContext.current
-    val interactionSource = remember { MutableInteractionSource() }
+) = with(viewModel) {
+    val sourcesState = sourcesState.collectAsStateWithLifecycle().value
+    val headlinesState = headlineState.collectAsStateWithLifecycle().value
+    val selectedItemPos = selectedTabPosition.collectAsStateWithLifecycle().value
 
-    val pullToRefreshState = rememberPullToRefreshState()
-    if (pullToRefreshState.isRefreshing) {
-        LaunchedEffect(true) {
-            pullToRefreshState.endRefresh()
-        }
+    LaunchedEffect(Unit) {
+        getSources()
+        getHeadlines()
     }
-    Box(modifier = Modifier.nestedScroll(pullToRefreshState.nestedScrollConnection)) {
+
+    Box(modifier = Modifier) {
         Column(
             modifier = modifier
                 .fillMaxSize()
                 .navigationBarsPadding()
         ) {
-            TopAppBar(
-                windowInsets = windowInsets,
-                title = {
-                    Column {
-                        Text(
-                            context.getString(R.string.app_name),
-                            style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.W600),
-                            color = colorScheme.onBackground,
-                            maxLines = 1
-                        )
-                    }
-                },
-                actions = {
-                    Row(
-                        horizontalArrangement = Arrangement.Absolute.spacedBy(8.dp),
-                        modifier = Modifier.padding(end = 24.dp)
-                    ) {
-                        SubcomposeAsyncImage(
-                            model = ImageRequest.Builder(context)
-                                .allowHardware(true)
-                                .data(R.drawable.ic_search)
-                                .build(),
-                            contentDescription = "",
-                            modifier = Modifier
-                                .width(18.dp)
-                                .height(18.dp)
-                                .clickable(
-                                    interactionSource = interactionSource,
-                                    indication = null
-                                ) { onNavigateToSearch() }
-                        )
-                    }
-                },
-                colors = TopAppBarColors(
-                    containerColor = colorScheme.background,
-                    actionIconContentColor = colorScheme.onBackground,
-                    titleContentColor = colorScheme.onBackground,
-                    scrolledContainerColor = colorScheme.background,
-                    navigationIconContentColor = colorScheme.onBackground
-                )
-            )
+            Header(onNavigateToSearch = onNavigateToSearch)
             Spacer(modifier = Modifier.height(16.dp))
-            SourceSection(isRefreshing = pullToRefreshState.isRefreshing)
+            SourceSection(
+                sources = sourcesState,
+                selectedItemPos = selectedItemPos,
+                onReload = { getSources() },
+                onUpdateSelectedTabPosition = { pos, source ->
+                    updateSelectedTabPosition(pos)
+                    getHeadlines(source)
+                }
+            )
             Spacer(modifier = Modifier.height(20.dp))
-            HeadlineSection(isRefreshing = pullToRefreshState.isRefreshing, onNewsClicked = onNewsClicked)
+            HeadlineSection(
+                headlines = headlinesState,
+                onReload = { getHeadlines() },
+                onNewsClicked = onNewsClicked
+            )
         }
-
-        PullToRefreshContainer(
-            modifier = Modifier.align(TopCenter),
-            state = pullToRefreshState,
-            containerColor = colorScheme.background,
-            contentColor = colorScheme.primary
-        )
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun Header(
+    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
+    onNavigateToSearch: () -> Unit
+) {
+    val context = LocalContext.current
+    val interactionSource = remember { MutableInteractionSource() }
+
+    TopAppBar(
+        windowInsets = windowInsets,
+        title = {
+            Column {
+                Text(
+                    context.getString(R.string.app_name),
+                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
+                    color = colorScheme.onBackground,
+                    maxLines = 1
+                )
+            }
+        },
+        actions = {
+            Row(
+                horizontalArrangement = Arrangement.Absolute.spacedBy(8.dp),
+                modifier = Modifier.padding(end = 24.dp)
+            ) {
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .allowHardware(true)
+                        .data(R.drawable.ic_search)
+                        .build(),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(18.dp)
+                        .height(18.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) { onNavigateToSearch() }
+                )
+            }
+        },
+        colors = TopAppBarColors(
+            containerColor = colorScheme.background,
+            actionIconContentColor = colorScheme.onBackground,
+            titleContentColor = colorScheme.onBackground,
+            scrolledContainerColor = colorScheme.background,
+            navigationIconContentColor = colorScheme.onBackground
+        )
+    )
 }
