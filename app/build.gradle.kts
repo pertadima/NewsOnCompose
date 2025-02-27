@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.ksp.library)
     alias(libs.plugins.dagger.library)
     alias(libs.plugins.detekt.library)
+    alias(libs.plugins.compose.library)
 }
 
 android {
@@ -35,7 +36,6 @@ android {
     }
     kotlinOptions { jvmTarget = "1.8" }
     buildFeatures { compose = true }
-    composeOptions { kotlinCompilerExtensionVersion = "1.5.10" }
     packaging {
         resources {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
