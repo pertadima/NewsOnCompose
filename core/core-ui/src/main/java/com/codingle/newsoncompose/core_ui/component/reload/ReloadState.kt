@@ -12,9 +12,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ripple.LocalRippleTheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
+import androidx.compose.material3.LocalRippleConfiguration
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.codingle.core_ui.R
-import com.codingle.newsoncompose.core_ui.component.util.NoRippleTheme
+import com.codingle.newsoncompose.core_ui.component.util.noRippleTheme
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +44,7 @@ fun ReloadState(
     CompositionLocalProvider(
         values = arrayOf(
             LocalMinimumInteractiveComponentEnforcement provides false,
-            LocalRippleTheme provides NoRippleTheme
+            LocalRippleConfiguration provides noRippleTheme()
         )
     ) {
         Box(

@@ -18,19 +18,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.airbnb.lottie.compose.LottieCompositionSpec.RawRes
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
+import com.codingle.newsoncompose.core_data.base.BaseState
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
-import com.codingle.newsoncompose.core_data.base.BaseState.StateInitial
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.headline.EmptyHeadline
 import com.codingle.newsoncompose.core_ui.component.headline.HorizontalHeadlineItem
@@ -39,21 +36,15 @@ import com.codingle.newsoncompose.core_ui.component.reload.ReloadState
 import com.codingle.newsoncompose.core_ui.component.shimmer.shimmer
 import com.codingle.newsoncompose.screen.home.HomeScreenAttr.HEADER_SIZE
 import com.codingle.newsoncompose.screen.home.HomeScreenAttr.LOADING_PLACEHOLDER_SIZE
-import com.codingle.newsoncompose.screen.home.HomeViewModel
 
 
 @Composable
 internal fun HeadlineSection(
-    viewModel: HomeViewModel = hiltViewModel(),
-    isRefreshing: Boolean,
+    headlines: BaseState<List<HeadlineArticleDto>>,
+    onReload: () -> Unit,
     onNewsClicked: (HeadlineArticleDto) -> Unit
-) = with(viewModel) {
+) {
     val context = LocalContext.current
-    val headlines = headlineState.collectAsStateWithLifecycle().value
-
-    LaunchedEffect(Unit) { if (headlines is StateInitial) getHeadlines() }
-    LaunchedEffect(isRefreshing) { if (isRefreshing) getHeadlines() }
-
     LazyColumn {
         item {
             Text(
@@ -73,7 +64,7 @@ internal fun HeadlineSection(
                     modifier = Modifier
                         .padding(horizontal = 16.dp)
                         .height(134.dp),
-                    onReload = { getHeadlines() }
+                    onReload = { onReload() }
                 )
 
                 is StateSuccess -> {
@@ -130,7 +121,6 @@ private fun SuccessHeadlineSection(
     onNewsClicked: (HeadlineArticleDto) -> Unit
 ) {
     val state = rememberLazyListState()
-    val context = LocalContext.current
     val headerData = data.take(HEADER_SIZE)
     val bottomData = data.drop(HEADER_SIZE)
 
