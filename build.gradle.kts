@@ -6,4 +6,5 @@ plugins {
     alias(libs.plugins.dagger.library) apply false
     alias(libs.plugins.ksp.library) apply false
     alias(libs.plugins.detekt.library) apply false
+    alias(libs.plugins.compose.library) apply false
 }
