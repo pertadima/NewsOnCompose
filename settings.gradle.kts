@@ -13,7 +13,9 @@ pluginManagement {
         gradlePluginPortal()
         maven(url = "https://oss.sonatype.org/content/repositories/snapshots/")
     }
+    includeBuild("build-logic")
 }
+
 dependencyResolutionManagement {
     repositoriesMode.set(FAIL_ON_PROJECT_REPOS)
     repositories {
