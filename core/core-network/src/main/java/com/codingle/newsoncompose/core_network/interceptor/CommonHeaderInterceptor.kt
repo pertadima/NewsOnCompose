@@ -1,6 +1,6 @@
 package com.codingle.newsoncompose.core_network.interceptor
 
-import com.codingle.network.BuildConfig
+import com.codingle.core_network.BuildConfig
 import okhttp3.Interceptor
 import okhttp3.Response
 import javax.inject.Inject

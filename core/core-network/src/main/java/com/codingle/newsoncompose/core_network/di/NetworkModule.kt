@@ -1,7 +1,7 @@
 package com.codingle.newsoncompose.core_network.di
 
 import android.app.Application
-import com.codingle.network.BuildConfig.BASE_URL
+import com.codingle.core_network.BuildConfig.BASE_URL
 import com.codingle.newsoncompose.core_network.interceptor.CommonHeaderInterceptor
 import com.google.gson.Gson
 import dagger.Module
