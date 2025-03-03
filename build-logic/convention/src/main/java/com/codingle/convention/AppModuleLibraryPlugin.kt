@@ -1,30 +1,39 @@
-import com.android.build.gradle.LibraryExtension
+
+import com.android.build.api.dsl.ApplicationExtension
 import com.codingle.convention.Constant.COMPILE_SDK
 import com.codingle.convention.Constant.MIN_SDK
+import com.codingle.convention.Constant.TARGET_SDK
+import com.codingle.convention.Constant.VERSION_CODE
+import com.codingle.convention.Constant.VERSION_NAME
 import org.gradle.api.JavaVersion.VERSION_1_8
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.configure
-import org.gradle.kotlin.dsl.dependencies
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
 import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 
-class CoreModuleLibraryPlugin : Plugin<Project> {
+
+class AppModuleLibraryPlugin : Plugin<Project> {
     override fun apply(target: Project) {
         with(target) {
-            pluginManager.apply("com.android.library")
+            pluginManager.apply("com.android.application")
             pluginManager.apply("org.jetbrains.kotlin.android")
             pluginManager.apply("com.google.devtools.ksp")
             pluginManager.apply("dagger.hilt.android.plugin")
             pluginManager.apply("io.gitlab.arturbosch.detekt")
+            pluginManager.apply("org.jetbrains.kotlin.plugin.compose")
 
-            extensions.configure<LibraryExtension> {
+            extensions.configure<ApplicationExtension> {
                 compileSdk = COMPILE_SDK
 
                 defaultConfig {
+                    applicationId = "com.codingle.newsoncompose"
                     minSdk = MIN_SDK
+                    targetSdk = TARGET_SDK
+                    versionCode = VERSION_CODE
+                    versionName = VERSION_NAME
                     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-                    consumerProguardFiles("consumer-rules.pro")
+                    vectorDrawables.useSupportLibrary = true
                 }
 
                 buildTypes {
@@ -45,14 +54,11 @@ class CoreModuleLibraryPlugin : Plugin<Project> {
                     }
                 }
 
-                // Dynamically set namespace based on module name
-                namespace = "com.codingle.${project.name.replace("-", "_")}"
-            }
+                buildFeatures.compose = true
 
-            dependencies {
-                if (project.name != "core-data") {
-                    add("implementation", project(":core-data"))
-                }
+                packaging.resources.excludes += "/META-INF/{AL2.0,LGPL2.1}"
+
+                namespace = "com.codingle.newsoncompose"
             }
         }
     }

@@ -1,7 +1,7 @@
+
 import com.android.build.gradle.LibraryExtension
 import com.codingle.convention.Constant.COMPILE_SDK
 import com.codingle.convention.Constant.MIN_SDK
-import com.codingle.convention.Extensions.libs
 import org.gradle.api.JavaVersion.VERSION_1_8
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -47,25 +47,10 @@ class ApiModuleLibraryPlugin : Plugin<Project> {
                     }
                 }
 
-                // Dynamically set namespace based on module name
                 namespace = "com.codingle.${project.name.replace("-", "_")}"
             }
 
             dependencies {
-                libs("androidx.core.ktx")?.let { add("implementation", it) }
-                libs("junit")?.let { add("testImplementation", it) }
-                libs("androidx.junit")?.let { add("androidTestImplementation", it) }
-                libs("androidx.espresso.core")?.let { add("androidTestImplementation", it) }
-
-                libs("daggerHilt")?.let { add("implementation", it) }
-                libs("daggerHiltCompiler")?.let { add("ksp", it) }
-                libs("gson")?.let { add("implementation", it) }
-                libs("retrofit")?.let { add("implementation", it) }
-                libs("room")?.let { add("implementation", it) }
-                libs("room.ktx")?.let { add("implementation", it) }
-                libs("roomCompiler")?.let { add("ksp", it) }
-
-                // Add local module dependency dynamically
                 add("implementation", project(":core-data"))
             }
         }

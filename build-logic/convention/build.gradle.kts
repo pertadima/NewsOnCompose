@@ -42,5 +42,15 @@ gradlePlugin {
             id = "com.codingle.build.logic.api"
             implementationClass = "ApiModuleLibraryPlugin"
         }
+
+        register("dependencies") {
+            id = "com.codingle.build.logic.common.dependencies"
+            implementationClass = "CommonDependenciesLibraryPlugin"
+        }
+
+        register("application") {
+            id = "com.codingle.build.logic.application"
+            implementationClass = "AppModuleLibraryPlugin"
+        }
     }
 }
