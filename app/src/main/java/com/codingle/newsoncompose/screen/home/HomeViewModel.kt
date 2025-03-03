@@ -31,6 +31,11 @@ class HomeViewModel @Inject constructor(
     private val _selectedTabPosition: MutableStateFlow<Int> = MutableStateFlow(0)
     val selectedTabPosition = _selectedTabPosition.asStateFlow()
 
+    init {
+        getSources()
+        getHeadlines()
+    }
+
     fun getSources() = collectFlow(
         getSourcesUseCase(),
         onSuccess = { _sourcesState.value = StateSuccess(it) },

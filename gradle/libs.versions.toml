@@ -17,7 +17,7 @@ ksp = "2.1.10-1.0.30"
 kotlin = "2.1.10"
 lifecycleRuntimeKtx = "2.8.7"
 lottie = "6.4.1"
-navigation = "2.8.7"
+navigation = "2.8.8"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 serialization = "1.6.3"
@@ -80,8 +80,10 @@ ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 serialization-library = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-plugin" }
 
 # Plugins defined by this project
+dependencies-build-logic = { id = "com.codingle.build.logic.common.dependencies", version = "unspecified" }
 core-build-logic = { id = "com.codingle.build.logic.core", version = "unspecified" }
 api-build-logic = { id = "com.codingle.build.logic.api", version = "unspecified" }
+application-build-logic = { id = "com.codingle.build.logic.application", version = "unspecified" }
 # End
 
 

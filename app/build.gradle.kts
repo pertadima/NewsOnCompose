@@ -1,46 +1,5 @@
-import org.gradle.api.JavaVersion.VERSION_1_8
-
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp.library)
-    alias(libs.plugins.dagger.library)
-    alias(libs.plugins.detekt.library)
-    alias(libs.plugins.compose.library)
-}
-
-android {
-    namespace = "com.codingle.newsoncompose"
-    compileSdk = 35
-
-    defaultConfig {
-        applicationId = "com.codingle.newsoncompose"
-        minSdk = 24
-        targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        vectorDrawables { useSupportLibrary = true }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-        }
-    }
-    compileOptions {
-        sourceCompatibility = VERSION_1_8
-        targetCompatibility = VERSION_1_8
-    }
-    kotlinOptions { jvmTarget = "1.8" }
-    buildFeatures { compose = true }
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
+    alias(libs.plugins.application.build.logic)
 }
 
 dependencies {
