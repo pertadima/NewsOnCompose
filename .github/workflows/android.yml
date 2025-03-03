@@ -18,5 +18,11 @@ jobs:
           distribution: 'adopt'
           java-version: '18'  # Specify the desired Java version here
 
+      - name: Ensure buildProperties directory exists and create envi.properties
+        run: |
+          mkdir -p buildProperties  # Ensure directory exists
+          echo "${{ secrets.ENVI_PROPERTIES }}" > buildProperties/envi.properties
+          ls -la buildProperties  # Debug: Check if file is created
+
       - name: Run Detekt
         run: ./gradlew detekt
