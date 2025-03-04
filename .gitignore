@@ -15,3 +15,7 @@
 .cxx
 local.properties
 /buildProperties/envi.properties
+/build-logic/.gradle
+/build-logic/convention/build
+/.idea
+/.kotlin
