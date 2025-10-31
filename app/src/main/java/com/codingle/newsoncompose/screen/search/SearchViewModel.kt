@@ -13,6 +13,7 @@ import com.codingle.newsoncompose.core_data.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,5 +41,25 @@ class SearchViewModel @Inject constructor(
     fun deleteKeywords() = collectFlow(
         deleteKeywordsUseCase(),
         onSuccess = { getKeywords() }
+    )
+
+    fun deleteKeyword(keywordDto: SearchKeywordDto) = collectFlow(
+        deleteKeywordsUseCase(keywordDto),
+        onSuccess = {
+            _keywordsState.update { currentState ->
+                when (currentState) {
+                    is StateSuccess -> {
+                        val currentList = currentState.data?.toMutableList() ?: mutableListOf()
+                        val indexDeletedItem = currentList.indexOf(keywordDto)
+                        if (currentList.size > indexDeletedItem) {
+                            currentList.removeAt(indexDeletedItem)
+                        }
+                        StateSuccess(currentList)
+                    }
+
+                    else -> currentState
+                }
+            }
+        }
     )
 }

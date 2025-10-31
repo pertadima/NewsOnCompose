@@ -2,10 +2,6 @@ package com.codingle.newsoncompose.core_ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Pink80 = Color(0xFFEFB8C8)
-val Pink40 = Color(0xFF7D5260)
-
-
 object Red {
     val Red100 = Color(0xFFFFF5F5)
     val Red200 = Color(0xFFFF5252)
