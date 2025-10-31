@@ -11,6 +11,7 @@ import com.codingle.newsoncompose.core_data.base.BaseState.StateLoading
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_data.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,6 +32,8 @@ class HomeViewModel @Inject constructor(
     private val _selectedTabPosition: MutableStateFlow<Int> = MutableStateFlow(0)
     val selectedTabPosition = _selectedTabPosition.asStateFlow()
 
+    private var headlineJob: Job? = null
+
     init {
         getSources()
         getHeadlines()
@@ -44,8 +47,8 @@ class HomeViewModel @Inject constructor(
     )
 
     fun getHeadlines(source: String = "") {
-        _headlineState.value = StateInitial
-        collectFlow(
+        headlineJob?.cancel()
+        headlineJob = collectFlow(
             getHeadlineUseCase(source),
             onSuccess = { _headlineState.value = StateSuccess(it) },
             onLoading = { _headlineState.value = StateLoading },

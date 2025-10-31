@@ -57,28 +57,26 @@ fun HomeScreen(
     val headlinesState = headlineState.collectAsStateWithLifecycle().value
     val selectedItemPos = selectedTabPosition.collectAsStateWithLifecycle().value
 
-    Box(modifier = Modifier) {
-        Column(
-            modifier = modifier.fillMaxSize()
-        ) {
-            Header(onNavigateToSearch = onNavigateToSearch)
-            Spacer(modifier = Modifier.height(16.dp))
-            SourceSection(
-                sources = sourcesState,
-                selectedItemPos = selectedItemPos,
-                onReload = { getSources() },
-                onUpdateSelectedTabPosition = { pos, source ->
-                    updateSelectedTabPosition(pos)
-                    getHeadlines(source)
-                }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
-            HeadlineSection(
-                headlines = headlinesState,
-                onReload = { getHeadlines() },
-                onNewsClicked = onNewsClicked
-            )
-        }
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        Header(onNavigateToSearch = onNavigateToSearch)
+        Spacer(modifier = Modifier.height(16.dp))
+        SourceSection(
+            sources = sourcesState,
+            selectedItemPos = selectedItemPos,
+            onReload = { getSources() },
+            onUpdateSelectedTabPosition = { pos, source ->
+                updateSelectedTabPosition(pos)
+                getHeadlines(source)
+            }
+        )
+        Spacer(modifier = Modifier.height(20.dp))
+        HeadlineSection(
+            headlines = headlinesState,
+            onReload = { getHeadlines() },
+            onNewsClicked = onNewsClicked
+        )
     }
 }
 

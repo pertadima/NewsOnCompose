@@ -8,7 +8,6 @@ import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Loading
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Success
 import com.codingle.newsoncompose.core_data.data.entity.ErrorData
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
@@ -22,7 +21,7 @@ open class BaseViewModel @Inject constructor() : ViewModel() {
         onLoading: (() -> Unit)? = null,
         onError: ((ErrorData?) -> Unit)? = null,
         onSuccess: (T?) -> Unit
-    ) = viewModelScope.launch(IO) {
+    ) = viewModelScope.launch {
         flow.distinctUntilChanged().collect {
             when (it) {
                 is Error -> onError?.invoke(it.error)

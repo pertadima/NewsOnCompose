@@ -12,8 +12,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -59,24 +60,35 @@ internal fun HeadlineSection(
 
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
-        item {
-            when (headlines) {
-                is StateFailed -> ReloadState(
-                    modifier = Modifier
-                        .padding(horizontal = 16.dp)
-                        .height(134.dp),
-                    onReload = { onReload() }
-                )
-
-                is StateSuccess -> {
-                    if (headlines.data.isNullOrEmpty()) EmptyHeadline(
-                        RawRes(R.raw.not_found),
-                        context.getString(R.string.headlines_no_result)
+        when (headlines) {
+            is StateFailed -> {
+                item {
+                    ReloadState(
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .height(134.dp),
+                        onReload = { onReload() }
                     )
-                    else SuccessHeadlineSection(data = headlines.data.orEmpty(), onNewsClicked = onNewsClicked)
                 }
+            }
 
-                else -> LoadingHeadlineSection()
+            is StateSuccess -> {
+                if (headlines.data.isNullOrEmpty()) {
+                    item {
+                        EmptyHeadline(
+                            RawRes(R.raw.not_found),
+                            context.getString(R.string.headlines_no_result)
+                        )
+                    }
+                } else {
+                    successHeadlineSection(data = headlines.data.orEmpty(), onNewsClicked = onNewsClicked)
+                }
+            }
+
+            else -> {
+                item {
+                    LoadingHeadlineSection()
+                }
             }
         }
     }
@@ -88,61 +100,61 @@ private fun LoadingHeadlineSection() {
         modifier = Modifier.padding(horizontal = 16.dp),
         horizontalArrangement = spacedBy(16.dp)
     ) {
-        repeat(LOADING_PLACEHOLDER_SIZE) {
-            item {
-                Column {
-                    Box(
-                        modifier = Modifier
-                            .height(82.dp)
-                            .width(140.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .shimmer()
-                            .background(colorScheme.surfaceContainerHigh)
-                    )
+        items(LOADING_PLACEHOLDER_SIZE) {
+            Column {
+                Box(
+                    modifier = Modifier
+                        .height(82.dp)
+                        .width(140.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .shimmer()
+                        .background(colorScheme.surfaceContainerHigh)
+                )
 
-                    Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
-                    Box(
-                        modifier = Modifier
-                            .height(24.dp)
-                            .width(140.dp)
-                            .clip(RoundedCornerShape(10.dp))
-                            .shimmer()
-                            .background(colorScheme.surfaceContainerHigh)
-                    )
-                }
+                Box(
+                    modifier = Modifier
+                        .height(24.dp)
+                        .width(140.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .shimmer()
+                        .background(colorScheme.surfaceContainerHigh)
+                )
             }
         }
     }
 }
 
-@Composable
-private fun SuccessHeadlineSection(
+private fun LazyListScope.successHeadlineSection(
     data: List<HeadlineArticleDto>,
     onNewsClicked: (HeadlineArticleDto) -> Unit
 ) {
-    val state = rememberLazyListState()
     val headerData = data.take(HEADER_SIZE)
     val bottomData = data.drop(HEADER_SIZE)
 
-    Column {
+    item {
         LazyRow(
             contentPadding = PaddingValues(horizontal = 16.dp),
-            state = state,
             horizontalArrangement = spacedBy(16.dp)
         ) {
-            headerData.forEach {
-                item {
-                    HorizontalHeadlineItem(
-                        title = it.title,
-                        urlToImage = it.urlToImage
-                    ) { onNewsClicked(it) }
-                }
+            items(
+                items = headerData,
+                key = { it.url.ifEmpty { "${it.title}_${it.hashCode()}" } }
+            ) {
+                HorizontalHeadlineItem(
+                    title = it.title,
+                    urlToImage = it.urlToImage
+                ) { onNewsClicked(it) }
             }
         }
+    }
 
+    item {
         Spacer(modifier = Modifier.height(25.dp))
+    }
 
+    item {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -150,15 +162,18 @@ private fun SuccessHeadlineSection(
                 .padding(horizontal = 16.dp)
                 .background(colorScheme.onBackground)
         )
+    }
 
-        bottomData.forEachIndexed { index, it ->
-            VerticalHeadlineItem(
-                index = index,
-                title = it.title,
-                source = it.source,
-                publishedAt = it.publishedAt,
-                urlToImage = it.urlToImage
-            ) { onNewsClicked(it) }
-        }
+    items(
+        items = bottomData,
+        key = { it.url.ifEmpty { "${it.title}_${it.hashCode()}" } }
+    ) { article ->
+        VerticalHeadlineItem(
+            index = bottomData.indexOf(article),
+            title = article.title,
+            source = article.source,
+            publishedAt = article.publishedAt,
+            urlToImage = article.urlToImage
+        ) { onNewsClicked(article) }
     }
 }
