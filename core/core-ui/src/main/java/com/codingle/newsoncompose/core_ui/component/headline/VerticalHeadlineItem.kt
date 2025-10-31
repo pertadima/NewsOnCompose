@@ -29,6 +29,7 @@ import coil.request.ImageRequest
 
 @Composable
 fun VerticalHeadlineItem(
+    index: Int,
     title: String,
     source: String,
     urlToImage: String,
@@ -37,6 +38,7 @@ fun VerticalHeadlineItem(
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
+
     Column(
         modifier = Modifier
             .padding(top = 20.dp)
@@ -48,7 +50,7 @@ fun VerticalHeadlineItem(
             ) { onItemClick() }
     ) {
         Row {
-            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank()) {
+            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && (index / 3) % 2 == 0) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(context)
                         .allowHardware(true)
@@ -93,6 +95,24 @@ fun VerticalHeadlineItem(
                     color = colorScheme.inverseSurface,
                     maxLines = 3,
                     overflow = Ellipsis
+                )
+            }
+
+            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && (index / 3) % 2 != 0) {
+                Spacer(modifier = Modifier.width(16.dp))
+
+                SubcomposeAsyncImage(
+                    model = ImageRequest.Builder(context)
+                        .allowHardware(true)
+                        .data(urlToImage)
+                        .build(),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .width(80.dp)
+                        .height(80.dp)
+                        .clip(RoundedCornerShape(10.dp))
+                        .background(colorScheme.surfaceContainerHigh),
+                    contentScale = ContentScale.Crop
                 )
             }
         }

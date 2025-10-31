@@ -128,6 +128,7 @@ private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>, onNewsClicked
     LazyColumn {
         items(data.size) {
             VerticalHeadlineItem(
+                index = it,
                 title = data[it].title,
                 source = data[it].source,
                 publishedAt = data[it].publishedAt,

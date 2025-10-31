@@ -151,8 +151,9 @@ private fun SuccessHeadlineSection(
                 .background(colorScheme.onBackground)
         )
 
-        bottomData.forEach {
+        bottomData.forEachIndexed { index, it ->
             VerticalHeadlineItem(
+                index = index,
                 title = it.title,
                 source = it.source,
                 publishedAt = it.publishedAt,
