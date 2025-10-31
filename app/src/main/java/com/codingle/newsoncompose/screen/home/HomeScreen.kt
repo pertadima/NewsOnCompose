@@ -59,9 +59,7 @@ fun HomeScreen(
 
     Box(modifier = Modifier) {
         Column(
-            modifier = modifier
-                .fillMaxSize()
-                .navigationBarsPadding()
+            modifier = modifier.fillMaxSize()
         ) {
             Header(onNavigateToSearch = onNavigateToSearch)
             Spacer(modifier = Modifier.height(16.dp))

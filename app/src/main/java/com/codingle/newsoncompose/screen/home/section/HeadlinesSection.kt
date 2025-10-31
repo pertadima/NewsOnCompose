@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -45,7 +46,7 @@ internal fun HeadlineSection(
     onNewsClicked: (HeadlineArticleDto) -> Unit
 ) {
     val context = LocalContext.current
-    LazyColumn {
+    LazyColumn(modifier = Modifier.fillMaxHeight()) {
         item {
             Text(
                 context.getString(R.string.headlines_today),

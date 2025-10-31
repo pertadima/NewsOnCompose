@@ -8,7 +8,7 @@ android {
     defaultConfig {
         val apiConfigFile = rootProject.file("./buildProperties/envi.properties")
         (apiConfigFile.exists()).let {
-            apiConfigFile.forEachLine { line ->
+             apiConfigFile.forEachLine { line ->
                 val entry = line.split("=", limit = 2)
                 rootProject.extra.set(entry.first(), entry.last())
             }
