@@ -24,6 +24,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.codingle.newsoncompose.core.formatter.DateFormat
+import com.codingle.newsoncompose.core.formatter.DateFormat.formatReadableDateLegacy
 
 @Composable
 fun VerticalHeadlineItem(
@@ -85,7 +87,7 @@ fun VerticalHeadlineItem(
                 Spacer(modifier = Modifier.height(6.dp))
 
                 Text(
-                    publishedAt,
+                    formatReadableDateLegacy(publishedAt),
                     style = typography.bodySmall,
                     color = colorScheme.inverseSurface,
                     maxLines = 3,

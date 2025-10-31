@@ -18,4 +18,5 @@ dependencies {
 
     implementation(libs.lottie)
     implementation(libs.coil.compose)
+    implementation(project(":core"))
 }
