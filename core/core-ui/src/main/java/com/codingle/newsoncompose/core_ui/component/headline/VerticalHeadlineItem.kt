@@ -38,6 +38,7 @@ fun VerticalHeadlineItem(
 ) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
+    val isLeftImage = remember(index) { (index / 3) % 2 == 0 }
 
     Column(
         modifier = Modifier
@@ -50,7 +51,7 @@ fun VerticalHeadlineItem(
             ) { onItemClick() }
     ) {
         Row {
-            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && (index / 3) % 2 == 0) {
+            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && isLeftImage) {
                 SubcomposeAsyncImage(
                     model = ImageRequest.Builder(context)
                         .allowHardware(true)
@@ -98,14 +99,18 @@ fun VerticalHeadlineItem(
                 )
             }
 
-            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && (index / 3) % 2 != 0) {
+            if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && !isLeftImage) {
                 Spacer(modifier = Modifier.width(16.dp))
 
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(context)
+                val imageModel = remember(urlToImage) {
+                    ImageRequest.Builder(context)
                         .allowHardware(true)
                         .data(urlToImage)
-                        .build(),
+                        .build()
+                }
+
+                SubcomposeAsyncImage(
+                    model = imageModel,
                     contentDescription = "",
                     modifier = Modifier
                         .width(80.dp)

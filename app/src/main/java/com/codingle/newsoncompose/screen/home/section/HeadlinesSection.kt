@@ -15,6 +15,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -140,7 +141,7 @@ private fun LazyListScope.successHeadlineSection(
         ) {
             items(
                 items = headerData,
-                key = { it.url.ifEmpty { "${it.title}_${it.hashCode()}" } }
+                key = { it.url.ifEmpty { it.title } }
             ) {
                 HorizontalHeadlineItem(
                     title = it.title,
@@ -164,12 +165,12 @@ private fun LazyListScope.successHeadlineSection(
         )
     }
 
-    items(
+    itemsIndexed(
         items = bottomData,
-        key = { it.url.ifEmpty { "${it.title}_${it.hashCode()}" } }
-    ) { article ->
+        key = { _, item -> item.url.ifEmpty { item.title } }
+    ) { index, article ->
         VerticalHeadlineItem(
-            index = bottomData.indexOf(article),
+            index = index,
             title = article.title,
             source = article.source,
             publishedAt = article.publishedAt,
