@@ -14,5 +14,5 @@ import javax.inject.Singleton
 class CoreModule {
     @Singleton
     @Provides
-    fun providesImageCacheHelper(@ApplicationContext context: Context) = ImageCacheHelper(context)
+    fun providesImageCacheHelper(@ApplicationContext context: Context) = ImageCacheHelper()
 }
