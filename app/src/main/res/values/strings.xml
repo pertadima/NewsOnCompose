@@ -9,6 +9,7 @@
     <string name="search_cancel">Cancel</string>
     <string name="search_placeholder">Enter your keyword here…</string>
     <string name="search_recent">Recent Search</string>
+    <string name="search_delete">Clear All</string>
 
     <string name="searchresult_title">"\"%s"\" results</string>
 </resources>

@@ -18,4 +18,12 @@ class SearchRepositoryImpl @Inject constructor(
     }.mapToEntity(transformData = {
         it.orEmpty().filter { data -> data.keyword != "" }.map { data -> data.mapToDto() }
     })
+
+    override fun deleteKeyword(data: SearchKeywordDto) = localResultFlow {
+        localDataSource.deleteKeyword(data.mapToEntity())
+    }
+
+    override fun deleteKeywords() = localResultFlow {
+        localDataSource.deleteKeywords()
+    }
 }

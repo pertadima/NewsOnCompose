@@ -3,19 +3,8 @@ package com.codingle.newsoncompose.screen.search
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.RowScope
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement.SpaceBetween
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -37,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment.Companion.CenterVertically
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
@@ -122,15 +112,36 @@ fun SearchScreen(
             )
         }
 
-        Text(
-            context.getString(R.string.search_recent),
-            style = typography.titleMedium.copy(fontWeight = W600),
-            color = colorScheme.onBackground,
-            maxLines = 1,
-            modifier = Modifier
-                .padding(horizontal = 16.dp)
-                .padding(top = 15.dp)
-        )
+        Row(
+            horizontalArrangement = SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            Text(
+                context.getString(R.string.search_recent),
+                style = typography.titleMedium.copy(fontWeight = W600),
+                color = colorScheme.onBackground,
+                maxLines = 1,
+                modifier = Modifier
+                    .padding(start = 16.dp)
+                    .padding(top = 15.dp)
+            )
+
+            if (keywords is StateSuccess && keywords.data?.isNotEmpty() == true) {
+                Text(
+                    context.getString(R.string.search_delete),
+                    style = typography.titleMedium.copy(fontWeight = W600),
+                    color = colorScheme.primary,
+                    maxLines = 1,
+                    modifier = Modifier
+                        .padding(end = 16.dp)
+                        .padding(top = 15.dp)
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) { viewModel.deleteKeywords() }
+                )
+            }
+        }
 
 
         if (keywords is StateSuccess) KeywordsStateSuccess(keywords.data.orEmpty(), toSearchResult)
@@ -159,7 +170,9 @@ private fun RowScope.SearchText(
         ),
         keyboardActions = KeyboardActions(onDone = {
             keyboard?.hide()
-            if (searchText.isNotEmpty() && searchText.isNotBlank()) viewModel.insertKeyword(searchText)
+            if (searchText.isNotEmpty() && searchText.isNotBlank()) viewModel.insertKeyword(
+                searchText
+            )
             toSearchResult(searchText)
             searchText = ""
         })

@@ -7,4 +7,6 @@ import kotlinx.coroutines.flow.Flow
 interface SearchRepository {
     fun insertKeyword(data: SearchKeywordDto): Flow<ApiResult<Unit>>
     fun getKeywords(): Flow<ApiResult<List<SearchKeywordDto>>>
+    fun deleteKeyword(data: SearchKeywordDto): Flow<ApiResult<Unit>>
+    fun deleteKeywords(): Flow<ApiResult<Unit>>
 }

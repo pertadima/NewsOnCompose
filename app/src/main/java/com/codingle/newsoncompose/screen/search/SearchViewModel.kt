@@ -1,6 +1,7 @@
 package com.codingle.newsoncompose.screen.search
 
 import com.codingle.newsoncompose.api_search.data.dto.SearchKeywordDto
+import com.codingle.newsoncompose.api_search.domain.delete.DeleteKeywordsUseCase
 import com.codingle.newsoncompose.api_search.domain.get.GetKeywordsUseCase
 import com.codingle.newsoncompose.api_search.domain.save.SaveKeywordUseCase
 import com.codingle.newsoncompose.core_data.base.BaseState
@@ -16,6 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
+    private val deleteKeywordsUseCase: DeleteKeywordsUseCase,
     private val getKeywordsUseCase: GetKeywordsUseCase,
     private val saveKeywordUseCase: SaveKeywordUseCase,
 ) : BaseViewModel() {
@@ -33,5 +35,10 @@ class SearchViewModel @Inject constructor(
         onLoading = { _keywordsState.value = StateLoading },
         onSuccess = { _keywordsState.value = StateSuccess(it) },
         onError = { _keywordsState.value = StateFailed(it) }
+    )
+
+    fun deleteKeywords() = collectFlow(
+        deleteKeywordsUseCase(),
+        onSuccess = { getKeywords() }
     )
 }

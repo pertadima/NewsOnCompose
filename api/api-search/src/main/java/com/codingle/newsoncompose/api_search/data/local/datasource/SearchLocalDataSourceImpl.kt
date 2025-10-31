@@ -13,4 +13,12 @@ class SearchLocalDataSourceImpl @Inject constructor(
         getLocalDataWithSingleObject { database.searchDao().insertKeyword(keyword) }
 
     override suspend fun getKeywords() = getLocalDataWithSingleObject { database.searchDao().getAllSearchKeyword() }
+
+    override suspend fun deleteKeyword(keyword: SearchKeywordEntity) = getLocalDataWithSingleObject {
+        database.searchDao().deleteKeyword(keyword)
+    }
+
+    override suspend fun deleteKeywords() = getLocalDataWithSingleObject {
+        database.searchDao().deleteKeywords()
+    }
 }
