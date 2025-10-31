@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -24,6 +25,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -106,12 +108,10 @@ private fun Header(
                 horizontalArrangement = Arrangement.Absolute.spacedBy(8.dp),
                 modifier = Modifier.padding(end = 24.dp)
             ) {
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .allowHardware(true)
-                        .data(R.drawable.ic_search)
-                        .build(),
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_search),
                     contentDescription = "",
+                    tint = colorScheme.onBackground,
                     modifier = Modifier
                         .width(18.dp)
                         .height(18.dp)

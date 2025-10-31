@@ -27,40 +27,47 @@ import com.codingle.newsoncompose.core_ui.theme.Red.Red700
 import com.codingle.newsoncompose.core_ui.theme.Red.Red900
 
 val DarkColorScheme = darkColorScheme(
-    primary = Red700,
-    onPrimary = White,
+    primary = Red200,
+    onPrimary = Black,
     primaryContainer = Red900,
     onPrimaryContainer = Red100,
-    inversePrimary = Red200,
+    inversePrimary = Red700,
+
     secondary = Amber500,
     onSecondary = Black,
     secondaryContainer = Amber800,
     onSecondaryContainer = Amber100,
+
     tertiary = Green500,
-    onTertiary = White,
+    onTertiary = Black,
     tertiaryContainer = Green800,
     onTertiaryContainer = Green100,
+
     background = Gray800,
     onBackground = White,
-    surface = Gray800,
+    surface = Gray700,
     onSurface = White,
-    surfaceVariant = Gray800,
-    onSurfaceVariant = Red700,
-    surfaceTint = Red700,
+    surfaceVariant = Gray600,
+    onSurfaceVariant = Gray100,
+    surfaceTint = Red200,
+
     inverseSurface = White,
     inverseOnSurface = Black,
+
     error = ErrorRed,
     onError = White,
     errorContainer = Red900,
     onErrorContainer = Red100,
-    outline = Gray600,
-    outlineVariant = Gray700,
+
+    outline = Gray400,
+    outlineVariant = Gray600,
     scrim = Black,
-    surfaceBright = Gray800,
+
+    surfaceBright = Gray700,
     surfaceDim = Gray800,
-    surfaceContainer = Gray800,
-    surfaceContainerHigh = Gray700,
-    surfaceContainerHighest = Gray600,
+    surfaceContainer = Gray700,
+    surfaceContainerHigh = Gray600,
+    surfaceContainerHighest = Gray400,
     surfaceContainerLow = Gray800,
     surfaceContainerLowest = Gray800
 )
