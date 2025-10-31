@@ -20,12 +20,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
+import coil.compose.AsyncImage
 
 @Composable
 fun VerticalHeadlineItem(
@@ -36,7 +34,6 @@ fun VerticalHeadlineItem(
     publishedAt: String,
     onItemClick: () -> Unit
 ) {
-    val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
     val isLeftImage = remember(index) { (index / 3) % 2 == 0 }
 
@@ -52,11 +49,8 @@ fun VerticalHeadlineItem(
     ) {
         Row {
             if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && isLeftImage) {
-                SubcomposeAsyncImage(
-                    model = ImageRequest.Builder(context)
-                        .allowHardware(true)
-                        .data(urlToImage)
-                        .build(),
+                AsyncImage(
+                    model = urlToImage,
                     contentDescription = "",
                     modifier = Modifier
                         .width(80.dp)
@@ -102,15 +96,8 @@ fun VerticalHeadlineItem(
             if (urlToImage.isNotEmpty() && urlToImage.isNotBlank() && !isLeftImage) {
                 Spacer(modifier = Modifier.width(16.dp))
 
-                val imageModel = remember(urlToImage) {
-                    ImageRequest.Builder(context)
-                        .allowHardware(true)
-                        .data(urlToImage)
-                        .build()
-                }
-
-                SubcomposeAsyncImage(
-                    model = imageModel,
+                AsyncImage(
+                    model = urlToImage,
                     contentDescription = "",
                     modifier = Modifier
                         .width(80.dp)

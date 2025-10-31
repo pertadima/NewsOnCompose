@@ -22,10 +22,7 @@ object CoroutineResultHandler {
             when (val localData = localCall()) {
                 is Error -> Error(localData.error)
                 is Loading -> Loading
-                is Success -> {
-                    Log.e("TAG", "localResultFlow: ${localData.data}", )
-                    Success(localData.data, false)
-                }
+                is Success -> Success(localData.data, false)
             }
         )
     }.flowOn(IO)
