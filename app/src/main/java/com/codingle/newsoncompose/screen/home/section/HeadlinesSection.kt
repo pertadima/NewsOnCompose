@@ -62,35 +62,28 @@ internal fun HeadlineSection(
         item { Spacer(modifier = Modifier.height(16.dp)) }
 
         when (headlines) {
-            is StateFailed -> {
+            is StateFailed -> item {
+                ReloadState(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .height(134.dp),
+                    onReload = { onReload() }
+                )
+            }
+
+            is StateSuccess -> if (headlines.data.isNullOrEmpty()) {
                 item {
-                    ReloadState(
-                        modifier = Modifier
-                            .padding(horizontal = 16.dp)
-                            .height(134.dp),
-                        onReload = { onReload() }
+                    EmptyHeadline(
+                        RawRes(R.raw.not_found),
+                        context.getString(R.string.headlines_no_result)
                     )
                 }
-            }
+            } else successHeadlineSection(
+                data = headlines.data.orEmpty(),
+                onNewsClicked = onNewsClicked
+            )
 
-            is StateSuccess -> {
-                if (headlines.data.isNullOrEmpty()) {
-                    item {
-                        EmptyHeadline(
-                            RawRes(R.raw.not_found),
-                            context.getString(R.string.headlines_no_result)
-                        )
-                    }
-                } else {
-                    successHeadlineSection(data = headlines.data.orEmpty(), onNewsClicked = onNewsClicked)
-                }
-            }
-
-            else -> {
-                item {
-                    LoadingHeadlineSection()
-                }
-            }
+            else -> item { LoadingHeadlineSection() }
         }
     }
 }
@@ -167,7 +160,7 @@ private fun LazyListScope.successHeadlineSection(
 
     itemsIndexed(
         items = bottomData,
-        key = { _, item -> item.url.ifEmpty { item.title } }
+        key = { _, item -> item.title }
     ) { index, article ->
         VerticalHeadlineItem(
             index = index,
