@@ -34,7 +34,6 @@ import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.core_data.base.BaseState.StateFailed
 import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
-import com.codingle.newsoncompose.core_data.data.navigation.Home
 import com.codingle.newsoncompose.core_data.data.navigation.WebView
 import com.codingle.newsoncompose.core_ui.component.headline.EmptyHeadline
 import com.codingle.newsoncompose.core_ui.component.headline.VerticalHeadlineItem
@@ -45,7 +44,7 @@ fun SearchResultRoute(navController: NavHostController, modifier: Modifier, keyw
     SearchResultScreen(
         modifier = modifier,
         keyword = keyword,
-        onNavigateBack = { navController.popBackStack(Home, false) },
+        onNavigateBack = { navController.popBackStack() },
         onNewsClicked = { navController.navigate(WebView(it.title, it.url)) }
     )
 }
@@ -105,7 +104,10 @@ fun SearchResultScreen(
         when (headlines) {
             is StateSuccess -> {
                 if (headlines.data.orEmpty().isEmpty()) {
-                    EmptyHeadline(RawRes(R.raw.not_found), context.getString(R.string.headlines_no_result))
+                    EmptyHeadline(
+                        RawRes(R.raw.not_found),
+                        context.getString(R.string.headlines_no_result)
+                    )
                 } else SuccessHeadlineSection(headlines.data.orEmpty(), onNewsClicked)
             }
 
@@ -124,7 +126,10 @@ fun SearchResultScreen(
 }
 
 @Composable
-private fun SuccessHeadlineSection(data: List<HeadlineArticleDto>, onNewsClicked: (HeadlineArticleDto) -> Unit) {
+private fun SuccessHeadlineSection(
+    data: List<HeadlineArticleDto>,
+    onNewsClicked: (HeadlineArticleDto) -> Unit
+) {
     LazyColumn {
         items(data.size) {
             VerticalHeadlineItem(

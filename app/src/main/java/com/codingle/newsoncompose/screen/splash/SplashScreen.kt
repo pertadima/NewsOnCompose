@@ -18,13 +18,14 @@ import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest.Builder
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.core_data.data.navigation.Home
+import com.codingle.newsoncompose.core_data.data.navigation.Main
 import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.LOGO_CONTENT_DESCRIPTION
 import com.codingle.newsoncompose.screen.splash.SplashScreenAttr.SPLASH_TIME
 import kotlinx.coroutines.delay
 
 @Composable
 fun SplashRoute(navController: NavHostController) {
-    SplashScreen { navController.navigate(Home) }
+    SplashScreen { navController.navigate(Main) }
 }
 
 @Composable

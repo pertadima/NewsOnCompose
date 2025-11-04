@@ -12,4 +12,8 @@
     <string name="search_delete">Clear All</string>
 
     <string name="searchresult_title">"\"%s"\" results</string>
+
+    <string name="navigation_home">Home</string>
+    <string name="navigation_favorite">Favorite</string>
+    <string name="navigation_profile">Profile</string>
 </resources>
