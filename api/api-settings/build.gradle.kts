@@ -2,8 +2,3 @@ plugins {
     alias(libs.plugins.dependencies.build.logic)
     alias(libs.plugins.api.build.logic)
 }
-
-dependencies {
-    implementation(libs.androidx.hilt.work)
-    implementation(libs.workManager)
-}

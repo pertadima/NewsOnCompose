@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons.Default
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -20,9 +20,12 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.core_data.data.navigation.Home
+import com.codingle.newsoncompose.core_data.data.navigation.MainTabDestination
+import com.codingle.newsoncompose.core_data.data.navigation.Setting
 import com.codingle.newsoncompose.core_ui.component.navigationbar.NavigationBar
 import com.codingle.newsoncompose.core_ui.component.navigationbar.NavigationItem
 import com.codingle.newsoncompose.screen.home.HomeRoute
+import com.codingle.newsoncompose.screen.setting.SettingRoute
 
 @Composable
 fun MainRoute(navController: NavHostController, modifier: Modifier) {
@@ -45,6 +48,7 @@ fun MainScreen(modifier: Modifier, navController: NavHostController) {
     ) { innerPadding ->
         val graph = tabNavController.createGraph(startDestination = Home) {
             composable<Home> { HomeRoute(navController, modifier) }
+            composable<Setting> { SettingRoute(navController, modifier) }
         }
 
         NavHost(
@@ -56,20 +60,21 @@ fun MainScreen(modifier: Modifier, navController: NavHostController) {
     }
 }
 
-private fun createNavigationMenu(context: Context) = listOf(
-    NavigationItem(
-        title = context.getString(R.string.navigation_home),
-        icon = Default.Home,
-        route = Home
-    ),
-    NavigationItem(
-        title = context.getString(R.string.navigation_favorite),
-        icon = Default.Favorite,
-        route = Home
-    ),
-    NavigationItem(
-        title = context.getString(R.string.navigation_profile),
-        icon = Default.Person,
-        route = Home
+private fun createNavigationMenu(context: Context): List<NavigationItem<MainTabDestination>> =
+    listOf(
+        NavigationItem(
+            title = context.getString(R.string.navigation_home),
+            icon = Default.Home,
+            route = Home
+        ),
+        NavigationItem(
+            title = context.getString(R.string.navigation_favorite),
+            icon = Default.Favorite,
+            route = Home
+        ),
+        NavigationItem(
+            title = context.getString(R.string.navigation_setting),
+            icon = Default.Settings,
+            route = Setting
+        )
     )
-)

@@ -15,5 +15,8 @@
 
     <string name="navigation_home">Home</string>
     <string name="navigation_favorite">Favorite</string>
-    <string name="navigation_profile">Profile</string>
+    <string name="navigation_setting">Setting</string>
+
+    <string name="setting_dark_mode">Dark Mode</string>
+    <string name="setting_preference">Preferences</string>
 </resources>

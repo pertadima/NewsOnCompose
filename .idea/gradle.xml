@@ -24,6 +24,7 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/api/api-headlines" />
             <option value="$PROJECT_DIR$/api/api-search" />
+            <option value="$PROJECT_DIR$/api/api-settings" />
             <option value="$PROJECT_DIR$/api/api-sources" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/build-logic" />
@@ -34,7 +35,6 @@
             <option value="$PROJECT_DIR$/core/core-ui" />
           </set>
         </option>
-        <option name="resolveExternalAnnotations" value="false" />
       </GradleProjectSettings>
     </option>
   </component>
