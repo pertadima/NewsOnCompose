@@ -1,31 +1,31 @@
 [versions]
-activityCompose = "1.10.1"
+activityCompose = "1.11.0"
 agp = "8.4.2"
 androidGradlePlugin = "8.7.3"
-androidTools = "31.8.2"
+androidTools = "31.13.0"
 coil = "2.7.0"
-composeBom = "2025.02.00"
-coreKtx = "1.15.0"
+composeBom = "2025.10.01"
+coreKtx = "1.17.0"
 daggerHilt = "2.53.1"
 detekt = "1.22.0"
 espressoCore = "3.6.1"
 gson = "2.11.0"
-hiltNavigation = "1.2.0"
+hiltNavigation = "1.3.0"
 junit = "4.13.2"
-junitVersion = "1.2.1"
+junitVersion = "1.3.0"
 ksp = "2.1.10-1.0.30"
 kotlin = "2.1.10"
-lifecycleRuntimeKtx = "2.8.7"
+lifecycleRuntimeKtx = "2.9.4"
 lottie = "6.4.1"
-navigation = "2.8.8"
+navigation = "2.9.5"
 okhttp = "4.12.0"
 retrofit = "2.11.0"
 serialization = "1.6.3"
 serialization-plugin = "2.0.0"
-room = "2.6.1"
-workManager = "2.10.0"
-hiltCommon = "1.2.0"
-hiltWork = "1.2.0"
+room = "2.8.3"
+workManager = "2.11.0"
+hiltCommon = "1.3.0"
+hiltWork = "1.3.0"
 
 [libraries]
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
@@ -84,6 +84,7 @@ dependencies-build-logic = { id = "com.codingle.build.logic.common.dependencies"
 core-build-logic = { id = "com.codingle.build.logic.core", version = "unspecified" }
 api-build-logic = { id = "com.codingle.build.logic.api", version = "unspecified" }
 application-build-logic = { id = "com.codingle.build.logic.application", version = "unspecified" }
+
 # End
 
 
