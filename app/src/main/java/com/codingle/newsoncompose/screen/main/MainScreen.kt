@@ -4,14 +4,12 @@ import android.content.Context
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons.Default
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -60,21 +58,22 @@ fun MainScreen(modifier: Modifier, navController: NavHostController) {
     }
 }
 
+@Composable
 private fun createNavigationMenu(context: Context): List<NavigationItem<MainTabDestination>> =
     listOf(
         NavigationItem(
             title = context.getString(R.string.navigation_home),
-            icon = Default.Home,
+            icon = ImageVector.vectorResource(R.drawable.ic_home),
             route = Home
         ),
         NavigationItem(
             title = context.getString(R.string.navigation_favorite),
-            icon = Default.Favorite,
+            icon = ImageVector.vectorResource(R.drawable.ic_home),
             route = Home
         ),
         NavigationItem(
             title = context.getString(R.string.navigation_setting),
-            icon = Default.Settings,
+            icon = ImageVector.vectorResource(R.drawable.ic_home),
             route = Setting
         )
     )
