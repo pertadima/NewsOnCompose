@@ -3,46 +3,36 @@ package com.codingle.newsoncompose.screen.home
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavHostController
-import coil.compose.SubcomposeAsyncImage
-import coil.request.ImageRequest
 import com.codingle.newsoncompose.R
 import com.codingle.newsoncompose.api_headlines.data.dto.HeadlineArticleDto
 import com.codingle.newsoncompose.core_data.data.navigation.Search
 import com.codingle.newsoncompose.core_data.data.navigation.WebView
+import com.codingle.newsoncompose.core_ui.component.newsappbar.NewsAppBar
 import com.codingle.newsoncompose.screen.home.section.HeadlineSection
 import com.codingle.newsoncompose.screen.home.section.SourceSection
 
 @Composable
 fun HomeRoute(navController: NavHostController, modifier: Modifier) {
-    HomeScreen(modifier = modifier,
+    HomeScreen(
+        modifier = modifier,
         onNavigateToSearch = { navController.navigate(Search) },
         onNewsClicked = { navController.navigate(WebView(it.title, it.url)) }
     )
@@ -82,27 +72,13 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun Header(
-    windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
-    onNavigateToSearch: () -> Unit
-) {
+private fun Header(onNavigateToSearch: () -> Unit) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
 
-    TopAppBar(
-        windowInsets = windowInsets,
-        title = {
-            Column {
-                Text(
-                    context.getString(R.string.app_name),
-                    style = MaterialTheme.typography.titleMedium.copy(fontWeight = W600),
-                    color = colorScheme.onBackground,
-                    maxLines = 1
-                )
-            }
-        },
+    NewsAppBar(
+        title = context.getString(R.string.app_name),
         actions = {
             Row(
                 horizontalArrangement = Arrangement.Absolute.spacedBy(8.dp),
@@ -121,13 +97,6 @@ private fun Header(
                         ) { onNavigateToSearch() }
                 )
             }
-        },
-        colors = TopAppBarColors(
-            containerColor = colorScheme.background,
-            actionIconContentColor = colorScheme.onBackground,
-            titleContentColor = colorScheme.onBackground,
-            scrolledContainerColor = colorScheme.background,
-            navigationIconContentColor = colorScheme.onBackground
-        )
+        }
     )
 }
