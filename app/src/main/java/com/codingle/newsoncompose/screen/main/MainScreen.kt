@@ -68,12 +68,12 @@ private fun createNavigationMenu(context: Context): List<NavigationItem<MainTabD
         ),
         NavigationItem(
             title = context.getString(R.string.navigation_favorite),
-            icon = ImageVector.vectorResource(R.drawable.ic_home),
+            icon = ImageVector.vectorResource(R.drawable.ic_favorite),
             route = Home
         ),
         NavigationItem(
             title = context.getString(R.string.navigation_setting),
-            icon = ImageVector.vectorResource(R.drawable.ic_home),
+            icon = ImageVector.vectorResource(R.drawable.ic_setting),
             route = Setting
         )
     )
