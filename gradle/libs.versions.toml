@@ -19,6 +19,8 @@ lifecycleRuntimeKtx = "2.9.4"
 lottie = "6.4.1"
 navigation = "2.9.5"
 okhttp = "4.12.0"
+proto = "0.9.4"
+protobuf = "3.25.1"
 retrofit = "2.11.0"
 serialization = "1.6.3"
 serialization-plugin = "2.0.0"
@@ -54,6 +56,7 @@ junit = { group = "junit", name = "junit", version.ref = "junit" }
 lottie = { group = "com.airbnb.android", name = "lottie-compose", version.ref = "lottie" }
 okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
 okhttpLogging = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+protobuf-protoc = { module = "com.google.protobuf:protoc", version.ref = "protobuf" }
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofitGson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit" }
 room = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
@@ -77,6 +80,7 @@ detekt-library = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dagger-library = { id = "com.google.dagger.hilt.android", version.ref = "daggerHilt" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp-library = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+proto-library = { id = "com.google.protobuf", version.ref = "proto" }
 serialization-library = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization-plugin" }
 
 # Plugins defined by this project

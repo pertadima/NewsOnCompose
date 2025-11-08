@@ -1,6 +1,7 @@
 package com.codingle.newsoncompose.screen.setting
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement.Absolute.SpaceBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ fun SettingRoute(navController: NavHostController, modifier: Modifier) {
 @Composable
 fun SettingScreen(
     viewModel: HomeViewModel = hiltViewModel(),
+    darkTheme: Boolean = isSystemInDarkTheme(),
     modifier: Modifier
 ) = with(viewModel) {
     val context = LocalContext.current
@@ -69,7 +71,7 @@ fun SettingScreen(
                 maxLines = 1
             )
             Switch(
-                checked = false,
+                checked = darkTheme,
                 onCheckedChange = {
 
                 }

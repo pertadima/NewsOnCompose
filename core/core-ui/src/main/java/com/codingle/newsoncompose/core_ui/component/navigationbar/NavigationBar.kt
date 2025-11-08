@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color.Companion.White
 
 @Composable
 fun <T> NavigationBar(
@@ -21,7 +20,7 @@ fun <T> NavigationBar(
     val selectedNavigationIndex = rememberSaveable { mutableIntStateOf(0) }
 
     NavigationBar(
-        containerColor = White,
+        containerColor = colorScheme.background,
         modifier = modifier
     ) {
         navigationItems.forEachIndexed { index, item ->
