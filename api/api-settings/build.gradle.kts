@@ -18,3 +18,8 @@ protobuf {
         }
     }
 }
+
+dependencies {
+    implementation(libs.protobuf.kotlin.lite)
+    implementation(libs.androidx.datastore)
+}
