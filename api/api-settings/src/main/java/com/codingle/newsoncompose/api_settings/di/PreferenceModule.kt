@@ -1,8 +1,8 @@
 package com.codingle.newsoncompose.api_settings.di
 
 import android.content.Context
-import com.codingle.newsoncompose.api_settings.preference.SettingPreferenceManager
-import com.codingle.newsoncompose.api_settings.preference.SettingPreferenceManagerImpl
+import com.codingle.newsoncompose.api_settings.data.preference.SettingPreferenceManager
+import com.codingle.newsoncompose.api_settings.data.preference.SettingPreferenceManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

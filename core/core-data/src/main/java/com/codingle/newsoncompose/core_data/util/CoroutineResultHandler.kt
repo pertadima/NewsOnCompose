@@ -1,6 +1,5 @@
 package com.codingle.newsoncompose.core_data.util
 
-import android.util.Log
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Error
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Loading
@@ -16,7 +15,12 @@ object CoroutineResultHandler {
         emit(callRemote(networkCall))
     }.flowOn(IO)
 
-    fun <T> localResultFlow(localCall: suspend () -> ApiResult<T>) = flow {
+    fun <T> localResultFlow(localCall: suspend () -> T) = flow {
+        emit(Loading)
+        Success(localCall(), false)
+    }.flowOn(IO)
+
+    fun <T> localApiResultFlow(localCall: suspend () -> ApiResult<T>) = flow {
         emit(Loading)
         emit(
             when (val localData = localCall()) {
