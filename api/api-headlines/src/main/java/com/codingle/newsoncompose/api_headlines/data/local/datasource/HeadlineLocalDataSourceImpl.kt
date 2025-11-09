@@ -11,7 +11,8 @@ class HeadlineLocalDataSourceImpl @Inject constructor(
     override suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>) =
         database.headlineDao().insertAllHeadline(sources)
 
-    override suspend fun getAllHeadlines() = getLocalDataWithSingleObject { database.headlineDao().getAllHeadlines() }
+    override suspend fun getAllHeadlines() =
+        getLocalDataWithSingleObject { database.headlineDao().getAllHeadlines() }
 
     override suspend fun getHeadlines(source: String) = getLocalDataWithSingleObject {
         database.headlineDao().getHeadlines(source)
@@ -19,5 +20,16 @@ class HeadlineLocalDataSourceImpl @Inject constructor(
 
     override suspend fun searchHeadline(query: String) = getLocalDataWithSingleObject {
         database.headlineDao().searchHeadline(query)
+    }
+
+    override suspend fun getFavoriteHeadlines() = getLocalDataWithSingleObject {
+        database.headlineDao().getFavoriteHeadlines()
+    }
+
+    override suspend fun updateIsFavoriteHeadline(
+        isFavorite: Boolean,
+        title: String
+    ) = getLocalDataWithSingleObject {
+        database.headlineDao().updateIsFavoriteHeadline(isFavorite, title)
     }
 }

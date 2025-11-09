@@ -10,7 +10,8 @@ data class HeadlineArticleDto(
     val source: String = "",
     val title: String = "",
     val url: String = "",
-    val urlToImage: String = ""
+    val urlToImage: String = "",
+    val isFavorite: Boolean = false
 ) {
     fun mapToEntity() = HeadlineArticleEntity(
         author = author,
@@ -20,6 +21,7 @@ data class HeadlineArticleDto(
         source = source,
         title = title,
         url = url,
-        urlToImage = urlToImage
+        urlToImage = urlToImage,
+        isFavorite = isFavorite
     )
 }

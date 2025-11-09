@@ -19,4 +19,7 @@
 
     <string name="setting_dark_mode">Dark Mode</string>
     <string name="setting_preference">Preferences</string>
+
+    <string name="favorite_saved">Successfully saved the headline!</string>
+    <string name="favorite_removed">Successfully removed the headline!</string>
 </resources>

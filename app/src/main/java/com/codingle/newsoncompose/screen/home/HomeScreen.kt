@@ -34,7 +34,7 @@ fun HomeRoute(navController: NavHostController, modifier: Modifier) {
     HomeScreen(
         modifier = modifier,
         onNavigateToSearch = { navController.navigate(Search) },
-        onNewsClicked = { navController.navigate(WebView(it.title, it.url)) }
+        onNewsClicked = { navController.navigate(WebView(it.title, it.url, it.isFavorite)) }
     )
 }
 
