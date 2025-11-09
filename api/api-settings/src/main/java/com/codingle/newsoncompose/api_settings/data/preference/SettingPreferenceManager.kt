@@ -1,4 +1,4 @@
-package com.codingle.newsoncompose.api_settings.preference
+package com.codingle.newsoncompose.api_settings.data.preference
 
 import kotlinx.coroutines.flow.Flow
 

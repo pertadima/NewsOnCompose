@@ -10,7 +10,7 @@ import com.codingle.newsoncompose.core_data.data.entity.ApiResult
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Error
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Loading
 import com.codingle.newsoncompose.core_data.data.entity.ApiResult.Success
-import com.codingle.newsoncompose.core_data.util.CoroutineResultHandler.localResultFlow
+import com.codingle.newsoncompose.core_data.util.CoroutineResultHandler.localApiResultFlow
 import com.codingle.newsoncompose.core_data.util.CoroutineResultHandler.remoteResultFlow
 import com.codingle.newsoncompose.core_data.util.CoroutineResultHandler.resultFlow
 import kotlinx.coroutines.Dispatchers.IO
@@ -32,7 +32,7 @@ class HeadlineRepositoryImpl @Inject constructor(
 
     override fun getHeadlines(source: String) = when (source.isEmpty()) {
         true -> getAllHeadlines()
-        else -> localResultFlow { localDataSource.getHeadlines(source) }.mapToEntity(
+        else -> localApiResultFlow { localDataSource.getHeadlines(source) }.mapToEntity(
             transformData = { data ->
                 when (data) {
                     is List<*> -> data.map { it.mapToDto() }
@@ -47,7 +47,7 @@ class HeadlineRepositoryImpl @Inject constructor(
             transformData = { response -> response?.articles.orEmpty().map { it.mapToDto() } },
             saveCallResult = { data, _ -> localDataSource.insertAllHeadline(data.map { it.mapToEntity() }) }
         )
-        val localData = localResultFlow { localDataSource.searchHeadline(query) }.mapToEntity(
+        val localData = localApiResultFlow { localDataSource.searchHeadline(query) }.mapToEntity(
             transformData = { response -> response.orEmpty().map { it.mapToDto() } },
         )
         combine(remoteData, localData) { remote, local ->
