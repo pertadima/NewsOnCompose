@@ -14,7 +14,8 @@ data class HeadlineArticleEntity(
     @ColumnInfo(name = "publishedAt") var publishedAt: String = "",
     @ColumnInfo(name = "source") var source: String = "",
     @ColumnInfo(name = "url") var url: String = "",
-    @ColumnInfo(name = "urlToImage") var urlToImage: String = ""
+    @ColumnInfo(name = "urlToImage") var urlToImage: String = "",
+    @ColumnInfo(name = "isFavorite") var isFavorite: Boolean = false
 ) {
     fun mapToDto() = HeadlineArticleDto(
         author = author,
@@ -24,6 +25,7 @@ data class HeadlineArticleEntity(
         source = source,
         title = title,
         url = url,
-        urlToImage = urlToImage
+        urlToImage = urlToImage,
+        isFavorite = isFavorite
     )
 }

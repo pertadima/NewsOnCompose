@@ -6,6 +6,8 @@ import android.view.ViewGroup.LayoutParams
 import android.view.WindowManager.LayoutParams.MATCH_PARENT
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast.LENGTH_SHORT
+import android.widget.Toast.makeText
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
@@ -37,15 +39,23 @@ import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.text.style.TextOverflow.Companion.Ellipsis
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.codingle.newsoncompose.R
 
 @Composable
-fun WebViewRoute(navController: NavHostController, modifier: Modifier, title: String, url: String) {
+fun WebViewRoute(
+    navController: NavHostController,
+    modifier: Modifier,
+    title: String,
+    url: String,
+    isFavorite: Boolean
+) {
     WebViewScreen(
         modifier = modifier,
         title = title,
         url = url,
+        isFavorite = isFavorite,
         onNavigateBack = { navController.popBackStack() }
     )
 }
@@ -54,15 +64,18 @@ fun WebViewRoute(navController: NavHostController, modifier: Modifier, title: St
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun WebViewScreen(
+    viewModel: WebViewViewModel = hiltViewModel(),
     modifier: Modifier,
     title: String,
     url: String,
+    isFavorite: Boolean,
     windowInsets: WindowInsets = TopAppBarDefaults.windowInsets,
     onNavigateBack: () -> Unit
-) {
+) = with(viewModel) {
     val context = LocalContext.current
     val interactionSource = remember { MutableInteractionSource() }
     var isLoading by remember { mutableStateOf(true) }
+    var isHeadlineFavorite by remember { mutableStateOf(isFavorite) }
 
     val webView = remember(context) {
         WebView(context).apply {
@@ -110,6 +123,33 @@ private fun WebViewScreen(
                             interactionSource = interactionSource,
                             indication = null
                         ) { onNavigateBack() }
+                        .padding(horizontal = 16.dp)
+                )
+            },
+            actions = {
+                Icon(
+                    imageVector = ImageVector.vectorResource(
+                        id =
+                            if (isHeadlineFavorite) R.drawable.ic_favorite
+                            else R.drawable.ic_outline_favorite
+                    ),
+                    contentDescription = "",
+                    modifier = Modifier
+                        .clickable(
+                            interactionSource = interactionSource,
+                            indication = null
+                        ) {
+                            makeText(
+                                context,
+                                context.getString(
+                                    if (isHeadlineFavorite) R.string.favorite_removed
+                                    else R.string.favorite_saved
+                                ),
+                                LENGTH_SHORT
+                            ).show()
+                            isHeadlineFavorite = isHeadlineFavorite.not()
+                            updateIsFavoriteHeadline(isHeadlineFavorite, title)
+                        }
                         .padding(horizontal = 16.dp)
                 )
             }

@@ -45,7 +45,7 @@ fun SearchResultRoute(navController: NavHostController, modifier: Modifier, keyw
         modifier = modifier,
         keyword = keyword,
         onNavigateBack = { navController.popBackStack() },
-        onNewsClicked = { navController.navigate(WebView(it.title, it.url)) }
+        onNewsClicked = { navController.navigate(WebView(it.title, it.url, it.isFavorite)) }
     )
 }
 

@@ -25,10 +25,11 @@ class HeadlineRepositoryImpl @Inject constructor(
     private val remoteDataSource: HeadlineRemoteDataSource
 ) : BaseRepository(), HeadlineRepository {
 
-    override fun getRemoteHeadlines() = remoteResultFlow { remoteDataSource.getHeadline() }.mapToEntity(
-        transformData = { response -> response?.articles.orEmpty().map { it.mapToDto() } },
-        saveCallResult = { data, _ -> localDataSource.insertAllHeadline(data.map { it.mapToEntity() }) }
-    )
+    override fun getRemoteHeadlines() =
+        remoteResultFlow { remoteDataSource.getHeadline() }.mapToEntity(
+            transformData = { response -> response?.articles.orEmpty().map { it.mapToDto() } },
+            saveCallResult = { data, _ -> localDataSource.insertAllHeadline(data.map { it.mapToEntity() }) }
+        )
 
     override fun getHeadlines(source: String) = when (source.isEmpty()) {
         true -> getAllHeadlines()
@@ -52,7 +53,8 @@ class HeadlineRepositoryImpl @Inject constructor(
         )
         combine(remoteData, localData) { remote, local ->
             if (remote is Success && local is Success) {
-                val combinedData = (local.data.orEmpty() + remote.data.orEmpty()).distinctBy { it.title }
+                val combinedData =
+                    (local.data.orEmpty() + remote.data.orEmpty()).distinctBy { it.title }
                 Success(combinedData, false)
             } else if (local is Success) Success(local.data.orEmpty(), false)
             else if (remote is Success) Success(remote.data.orEmpty(), true)
@@ -60,6 +62,15 @@ class HeadlineRepositoryImpl @Inject constructor(
             else Loading
         }.collect { emit(it) }
     }.flowOn(IO)
+
+    override fun getFavoriteHeadlines() = localApiResultFlow {
+        localDataSource.getFavoriteHeadlines()
+    }.mapToEntity(transformData = { it.orEmpty().map { item -> item.mapToDto() } })
+
+    override fun updateIsFavoriteHeadline(
+        isFavorite: Boolean,
+        title: String
+    ) = localApiResultFlow { localDataSource.updateIsFavoriteHeadline(isFavorite, title) }
 
     private fun getAllHeadlines() = resultFlow(
         networkCall = { remoteDataSource.getHeadline() },
@@ -77,6 +88,7 @@ class HeadlineRepositoryImpl @Inject constructor(
             }
         },
         saveCallResult = { data, isRemote ->
-            if (isRemote) localDataSource.insertAllHeadline(data?.map { it.mapToEntity() }.orEmpty())
+            if (isRemote) localDataSource.insertAllHeadline(data?.map { it.mapToEntity() }
+                .orEmpty())
         })
 }

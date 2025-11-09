@@ -8,4 +8,6 @@ interface HeadlineLocalDataSource {
     suspend fun getAllHeadlines(): ApiResult<List<HeadlineArticleEntity>?>
     suspend fun getHeadlines(source: String): ApiResult<List<HeadlineArticleEntity>?>
     suspend fun searchHeadline(query: String): ApiResult<List<HeadlineArticleEntity>?>
+    suspend fun getFavoriteHeadlines(): ApiResult<List<HeadlineArticleEntity>?>
+    suspend fun updateIsFavoriteHeadline(isFavorite: Boolean, title: String): ApiResult<Unit>
 }

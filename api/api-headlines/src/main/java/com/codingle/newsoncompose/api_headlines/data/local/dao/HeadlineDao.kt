@@ -17,7 +17,15 @@ interface HeadlineDao {
     @Insert(onConflict = REPLACE)
     suspend fun insertAllHeadline(sources: List<HeadlineArticleEntity>)
 
-    @Query("SELECT * FROM tbl_headline WHERE title LIKE '%' || :query || '%' OR source LIKE '%' || :query || '%' " +
-            "ORDER BY publishedAt DESC")
+    @Query(
+        "SELECT * FROM tbl_headline WHERE title LIKE '%' || :query || '%' OR source LIKE '%' || " +
+                ":query || '%' ORDER BY publishedAt DESC"
+    )
     suspend fun searchHeadline(query: String): List<HeadlineArticleEntity>?
+
+    @Query("SELECT * from tbl_headline WHERE isFavorite = 1")
+    suspend fun getFavoriteHeadlines(): List<HeadlineArticleEntity>?
+
+    @Query("UPDATE tbl_headline SET isFavorite = :isFavorite WHERE title = :title")
+    suspend fun updateIsFavoriteHeadline(isFavorite: Boolean, title: String)
 }

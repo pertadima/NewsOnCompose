@@ -65,7 +65,7 @@ fun MainScreen(modifier: Modifier) {
 
         composable<WebView> {
             val webView: WebView = it.toRoute()
-            WebViewRoute(navController, modifier, webView.title, webView.url)
+            WebViewRoute(navController, modifier, webView.title, webView.url, webView.isFavorite)
         }
     }
 }

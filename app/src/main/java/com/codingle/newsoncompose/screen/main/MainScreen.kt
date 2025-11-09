@@ -17,11 +17,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.createGraph
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.core_data.data.navigation.Favorite
 import com.codingle.newsoncompose.core_data.data.navigation.Home
 import com.codingle.newsoncompose.core_data.data.navigation.MainTabDestination
 import com.codingle.newsoncompose.core_data.data.navigation.Setting
 import com.codingle.newsoncompose.core_ui.component.navigationbar.NavigationBar
 import com.codingle.newsoncompose.core_ui.component.navigationbar.NavigationItem
+import com.codingle.newsoncompose.screen.favorite.FavoriteRoute
 import com.codingle.newsoncompose.screen.home.HomeRoute
 import com.codingle.newsoncompose.screen.setting.SettingRoute
 
@@ -46,6 +48,7 @@ fun MainScreen(modifier: Modifier, navController: NavHostController) {
     ) { innerPadding ->
         val graph = tabNavController.createGraph(startDestination = Home) {
             composable<Home> { HomeRoute(navController, modifier) }
+            composable<Favorite> { FavoriteRoute(navController, modifier) }
             composable<Setting> { SettingRoute(modifier) }
         }
 
@@ -54,7 +57,6 @@ fun MainScreen(modifier: Modifier, navController: NavHostController) {
             graph = graph,
             modifier = Modifier.padding(innerPadding)
         )
-
     }
 }
 
@@ -69,7 +71,7 @@ private fun createNavigationMenu(context: Context): List<NavigationItem<MainTabD
         NavigationItem(
             title = context.getString(R.string.navigation_favorite),
             icon = ImageVector.vectorResource(R.drawable.ic_favorite),
-            route = Home
+            route = Favorite
         ),
         NavigationItem(
             title = context.getString(R.string.navigation_setting),
