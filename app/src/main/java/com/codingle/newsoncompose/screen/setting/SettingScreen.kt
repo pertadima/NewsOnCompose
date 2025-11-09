@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults.colors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment.Companion.CenterVertically
@@ -72,7 +73,13 @@ fun SettingScreen(
                 )
                 Switch(
                     checked = isDarkMode.data ?: false,
-                    onCheckedChange = { updateDarkMode(!(isDarkMode.data ?: false)) }
+                    onCheckedChange = { updateDarkMode(!(isDarkMode.data ?: false)) },
+                    colors = colors(
+                        checkedThumbColor = colorScheme.primary,
+                        uncheckedThumbColor = colorScheme.onSurfaceVariant,
+                        checkedTrackColor = colorScheme.primary.copy(alpha = 0.54f),
+                        uncheckedTrackColor = colorScheme.onSurfaceVariant.copy(alpha = 0.38f)
+                    )
                 )
             }
         }
