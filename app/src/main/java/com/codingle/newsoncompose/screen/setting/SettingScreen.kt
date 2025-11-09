@@ -1,7 +1,6 @@
 package com.codingle.newsoncompose.screen.setting
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement.Absolute.SpaceBetween
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -22,23 +21,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight.Companion.W600
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.navigation.NavHostController
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.codingle.newsoncompose.R
+import com.codingle.newsoncompose.core_data.base.BaseState.StateSuccess
 import com.codingle.newsoncompose.core_ui.component.newsappbar.NewsAppBar
-import com.codingle.newsoncompose.screen.home.HomeViewModel
 
 @Composable
-fun SettingRoute(navController: NavHostController, modifier: Modifier) {
+fun SettingRoute(modifier: Modifier) {
     SettingScreen(modifier = modifier)
 }
 
 @Composable
 fun SettingScreen(
-    viewModel: HomeViewModel = hiltViewModel(),
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    viewModel: SettingViewModel = hiltViewModel(),
     modifier: Modifier
 ) = with(viewModel) {
     val context = LocalContext.current
+    val isDarkMode = isDarkMode.collectAsStateWithLifecycle().value
 
     Column(
         modifier = modifier.fillMaxSize()
@@ -64,18 +63,18 @@ fun SettingScreen(
                 .padding(horizontal = 16.dp)
                 .fillMaxWidth()
         ) {
-            Text(
-                context.getString(R.string.setting_dark_mode),
-                style = typography.bodyMedium,
-                color = colorScheme.onBackground,
-                maxLines = 1
-            )
-            Switch(
-                checked = darkTheme,
-                onCheckedChange = {
-
-                }
-            )
+            if (isDarkMode is StateSuccess) {
+                Text(
+                    context.getString(R.string.setting_dark_mode),
+                    style = typography.bodyMedium,
+                    color = colorScheme.onBackground,
+                    maxLines = 1
+                )
+                Switch(
+                    checked = isDarkMode.data ?: false,
+                    onCheckedChange = { updateDarkMode(!(isDarkMode.data ?: false)) }
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(20.dp))

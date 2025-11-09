@@ -46,7 +46,7 @@ fun MainScreen(modifier: Modifier, navController: NavHostController) {
     ) { innerPadding ->
         val graph = tabNavController.createGraph(startDestination = Home) {
             composable<Home> { HomeRoute(navController, modifier) }
-            composable<Setting> { SettingRoute(navController, modifier) }
+            composable<Setting> { SettingRoute(modifier) }
         }
 
         NavHost(

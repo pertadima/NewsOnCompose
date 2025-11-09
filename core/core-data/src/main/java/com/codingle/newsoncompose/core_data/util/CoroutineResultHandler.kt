@@ -15,11 +15,6 @@ object CoroutineResultHandler {
         emit(callRemote(networkCall))
     }.flowOn(IO)
 
-    fun <T> localResultFlow(localCall: suspend () -> T) = flow {
-        emit(Loading)
-        Success(localCall(), false)
-    }.flowOn(IO)
-
     fun <T> localApiResultFlow(localCall: suspend () -> ApiResult<T>) = flow {
         emit(Loading)
         emit(
