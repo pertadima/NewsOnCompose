@@ -48,4 +48,5 @@ dependencies {
     implementation(project(":api-sources"))
     implementation(project(":api-headlines"))
     implementation(project(":api-search"))
+    implementation(project(":api-settings"))
 }
